@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки</string>
     <string name="app_name">8-800</string>
-    <string name="clear">Clear</string>
-    <string name="phone_number">Phone number</string>
+    <string name="clear">Очистить</string>
+    <string name="phone_number">Номер телефона</string>
     <string name="city">City</string>
     <string name="name">Name</string>
     <string name="date_of_birth">Date of birth</string>

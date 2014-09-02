@@ -8,9 +8,63 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.lizaalert.hotline.InputFormActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
+        android:text="@string/clear" />
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_below="@id/btn_clear"
+        android:hint="@string/phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:inputType="phone" />
+    <EditText
+        android:id="@+id/et_city"
+        android:layout_below="@id/et_phone"
+        android:hint="@string/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:imeOptions="actionNext" />
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_below="@id/et_city"
+        android:hint="@string/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:imeOptions="actionNext" />
+    <EditText
+        android:id="@+id/et_birthday"
+        android:layout_below="@id/et_name"
+        android:hint="@string/date_of_birth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:inputType="date" />
+    <EditText
+        android:id="@+id/et_other"
+        android:layout_below="@id/et_birthday"
+        android:layout_above="@+id/btn_sms"
+        android:hint="@string/other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone" />
+    <Button
+        android:id="@+id/btn_sms"
+        android:layout_above="@+id/btn_email"
+        android:text="SMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_email"
+        android:layout_alignParentBottom="true"
+        android:text="EMAIL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
