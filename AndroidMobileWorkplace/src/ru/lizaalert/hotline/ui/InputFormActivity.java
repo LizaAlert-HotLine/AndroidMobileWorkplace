@@ -115,6 +115,7 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.btn_clear:
                 clearInput();
+                Settings.instance().clearRecent();
                 break;
             case R.id.btn_sms:
                 Toast.makeText(this, "This is dummy SMS button", Toast.LENGTH_LONG).show();
@@ -125,7 +126,6 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
                 throw new NullPointerException();
 //                break;
         }
-        Settings.instance().clearRecent();
     }
 
     abstract class SimpleTextWatcher implements TextWatcher {
