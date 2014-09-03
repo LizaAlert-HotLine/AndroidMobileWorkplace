@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context="ru.lizaalert.hotline.InputFormActivity" >
+    tools:context="ru.lizaalert.hotline.ui.InputFormActivity" >
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
             android:imeOptions="actionNext"
             android:inputType="date" />
         <EditText
-            android:id="@+id/et_other"
+            android:id="@+id/et_descr"
             android:hint="@string/other"
             android:inputType="textMultiLine"
             android:lines="10"
