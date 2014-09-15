@@ -19,12 +19,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
+import ru.lizaalert.hotline.ChannelHandler;
 import ru.lizaalert.hotline.IntentFields;
 import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.Settings;
+import ru.lizaalert.hotline.SmsChannel;
 
 
-public class InputFormActivity extends ActionBarActivity implements View.OnClickListener {
+public class InputFormActivity extends ActionBarActivity implements View.OnClickListener, ChannelHandler {
 
     private EditText etPhone;
     private EditText etCity;
@@ -204,10 +208,22 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
                 + etBirthday.getText() + "\n"
                 + etDescr.getText();
 
-        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent(IntentFields.SMS_SENT), 0);
-        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent(IntentFields.SMS_DELIVERED), 0);
+        new SmsChannel(this).send(result, Settings.instance().getPhoneDest(), this);
+    }
 
-        smsManager.sendTextMessage(Settings.instance().getPhoneDest(), null, result, sentIntent, deliveredIntent);
+    @Override
+    public void sent(Calendar c) {
+        Toast.makeText(this, "Send at " + c.getTime(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void error(Calendar c, String message) {
+
+    }
+
+    @Override
+    public void delivered(Calendar c) {
+        Toast.makeText(this, "Delivered at " + c.getTime(), Toast.LENGTH_LONG).show();
     }
 
     abstract class SimpleTextWatcher implements TextWatcher {
