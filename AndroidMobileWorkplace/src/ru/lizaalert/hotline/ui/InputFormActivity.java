@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import ru.lizaalert.hotline.ChannelHandler;
@@ -36,10 +37,7 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
     private EditText etBirthday;
     private EditText etDescr;
 
-    private BroadcastReceiver receiver;
-    private IntentFilter intentFilter;
-
-    private SmsManager smsManager = SmsManager.getDefault();
+    private SmsChannel smsChannel = new SmsChannel(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,34 +94,6 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
             }
         });
 
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (IntentFields.SMS_SENT.equals(action)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(InputFormActivity.this, "SMS sent", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-                if (IntentFields.SMS_DELIVERED.equals(action)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(InputFormActivity.this, "SMS delivered", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        };
-
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(IntentFields.SMS_SENT);
-        intentFilter.addAction(IntentFields.SMS_DELIVERED);
-
         findViewById(R.id.btn_clear).setOnClickListener(this);
         findViewById(R.id.btn_sms).setOnClickListener(this);
         findViewById(R.id.btn_email).setOnClickListener(this);
@@ -132,28 +102,22 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(receiver, intentFilter);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(receiver);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.input_form, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
@@ -208,12 +172,12 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
                 + etBirthday.getText() + "\n"
                 + etDescr.getText();
 
-        new SmsChannel(this).send(result, Settings.instance().getPhoneDest(), this);
+        smsChannel.send(result, Settings.instance().getPhoneDest(), this);
     }
 
     @Override
     public void sent(Calendar c) {
-        Toast.makeText(this, "Send at " + c.getTime(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Sent at " + c.getTime(), Toast.LENGTH_LONG).show();
     }
 
     @Override
