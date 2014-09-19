@@ -10,4 +10,11 @@
     <string name="date_of_birth">Date of birth</string>
     <string name="other">Other</string>
 
+    <string name="got_it">Got it</string>
+    
+    <string name="error_no_phone">No phone number specified. Please specify phone number in settings</string>
+
+    <string name="pref_general">General</string>
+    <string name="pref_phone">Phone number</string>
+
 </resources>
