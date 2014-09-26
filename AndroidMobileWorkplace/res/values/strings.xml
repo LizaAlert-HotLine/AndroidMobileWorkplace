@@ -16,5 +16,7 @@
 
     <string name="pref_general">General</string>
     <string name="pref_phone">Phone number</string>
+    <string name="vk_group">VK GROUP</string>
+    <string name="vk_app_id">1245534</string>
 
 </resources>

@@ -1,29 +1,27 @@
 package ru.lizaalert.hotline.ui;
 
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.telephony.SmsManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdkListener;
+import com.vk.sdk.VKUIHelper;
+import com.vk.sdk.api.VKError;
+
 import java.util.Calendar;
 
 import ru.lizaalert.hotline.ChannelHandler;
-import ru.lizaalert.hotline.IntentFields;
 import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.Settings;
 import ru.lizaalert.hotline.SmsChannel;
@@ -38,6 +36,18 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
     private EditText etDescr;
 
     private SmsChannel smsChannel = new SmsChannel(this);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +107,28 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
         findViewById(R.id.btn_clear).setOnClickListener(this);
         findViewById(R.id.btn_sms).setOnClickListener(this);
         findViewById(R.id.btn_email).setOnClickListener(this);
+        findViewById(R.id.btn_vk).setOnClickListener(this);
+
+        initVK();
+    }
+
+    private void initVK() {
+        VKSdk.initialize(new VKSdkListener() {
+            @Override
+            public void onCaptchaError(VKError captchaError) {
+
+            }
+
+            @Override
+            public void onTokenExpired(VKAccessToken expiredToken) {
+
+            }
+
+            @Override
+            public void onAccessDenied(VKError authorizationError) {
+
+            }
+        }, getString(R.string.vk_app_id), null); //FIXME add token?
     }
 
     @Override
@@ -162,6 +194,10 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
             case R.id.btn_email:
                 Toast.makeText(this, "This is dummy Email button", Toast.LENGTH_LONG).show();
                 break;
+            case R.id.btn_vk:
+
+
+                break;
         }
     }
 
@@ -204,5 +240,10 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
 
         @Override
         public abstract void afterTextChanged(Editable editable);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 }
