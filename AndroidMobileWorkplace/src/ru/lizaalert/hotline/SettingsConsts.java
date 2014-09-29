@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Anton Prozorov
+    Copyright (c) 2014 Anton Prozorov <avprozorov@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
