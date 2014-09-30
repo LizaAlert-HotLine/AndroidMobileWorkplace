@@ -13,11 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.VKUIHelper;
-import com.vk.sdk.api.VKError;
 
 import java.util.Calendar;
 
@@ -25,6 +21,7 @@ import ru.lizaalert.hotline.ChannelHandler;
 import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.Settings;
 import ru.lizaalert.hotline.SmsChannel;
+import ru.lizaalert.hotline.VkManager;
 
 
 public class InputFormActivity extends ActionBarActivity implements View.OnClickListener, ChannelHandler {
@@ -36,11 +33,14 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
     private EditText etDescr;
 
     private SmsChannel smsChannel = new SmsChannel(this);
+    private VkManager vkManager;
 
     @Override
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
+        vkManager = VkManager.getInstance(this);
+        vkManager.initVk();
     }
 
     @Override
@@ -108,27 +108,6 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
         findViewById(R.id.btn_sms).setOnClickListener(this);
         findViewById(R.id.btn_email).setOnClickListener(this);
         findViewById(R.id.btn_vk).setOnClickListener(this);
-
-        initVK();
-    }
-
-    private void initVK() {
-        VKSdk.initialize(new VKSdkListener() {
-            @Override
-            public void onCaptchaError(VKError captchaError) {
-
-            }
-
-            @Override
-            public void onTokenExpired(VKAccessToken expiredToken) {
-
-            }
-
-            @Override
-            public void onAccessDenied(VKError authorizationError) {
-
-            }
-        }, getString(R.string.vk_app_id), null); //FIXME add token?
     }
 
     @Override
@@ -195,20 +174,22 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
                 Toast.makeText(this, "This is dummy Email button", Toast.LENGTH_LONG).show();
                 break;
             case R.id.btn_vk:
-
-
+                vkManager.requestWallPost(composeMessage());
                 break;
         }
     }
 
     private void sendSms() {
-        String result = etPhone.getText() + "\n"
+        String result = composeMessage();
+        smsChannel.send(result, Settings.instance().getPhoneDest(), this);
+    }
+
+    private String composeMessage() {
+        return etPhone.getText() + "\n"
                 + etCity.getText() + "\n"
                 + etName.getText() + "\n"
                 + etBirthday.getText() + "\n"
                 + etDescr.getText();
-
-        smsChannel.send(result, Settings.instance().getPhoneDest(), this);
     }
 
     @Override

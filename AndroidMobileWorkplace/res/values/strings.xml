@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string translatable="false" name="vk_app_id">4565821</string>
+
     <string name="action_settings">Settings</string>
     <string name="app_name">8-800</string>
     <string name="clear">Clear</string>
@@ -17,6 +19,10 @@
     <string name="pref_general">General</string>
     <string name="pref_phone">Phone number</string>
     <string name="vk_group">VK GROUP</string>
-    <string name="vk_app_id">1245534</string>
+    <string name="post_successfull">Post successfull</string>
+    <string name="vk_send_group_request_title">Oops, error occured</string>
+    <string name="vk_send_group_request_message">May be you need to sign up to the group</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
