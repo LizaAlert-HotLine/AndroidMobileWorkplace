@@ -26,10 +26,10 @@ import com.vk.sdk.api.VKResponse;
  *
  * This manager handles vk authorisation and a wall post to Lisa Alert Group.
  *
- * App is registered under following vk account https://vk.com/editapp?id=4565821&section=info
- * WARNING for signed application you need to add fingerprints follow ling above to add the fingerprint.
+ * Find vk application account here https://vk.com/editapp?id=4565821&section=info
+ * WARNING for signed application or to test debug version on your machine you need to add fingerprints to vk application account.
  *
- * All the sdk documentation, including instructions to add fingerprints you can find here https://vk.com/dev/android_sdk;
+ * All the sdk documentation, including instructions of how to obtain fingerprints you can find here https://vk.com/dev/android_sdk;
  *
  * Api documentation https://vk.com/dev/methods
  */
@@ -50,6 +50,11 @@ public class VkManager {
         return instance;
     }
 
+    /**
+     * To receive necessary permissions during authorization, when the authorization window opens
+     * you need to pass scope parameter containing names of the required permissions separated by space or comma.
+     * https://vk.com/dev/permissions
+     */
     public static final String VK_PERMISSIONS_SCOPE[] = {
             VKScope.WALL,
             VKScope.OFFLINE,
@@ -73,18 +78,15 @@ public class VkManager {
         @Override
         public void onCaptchaError(VKError captchaError) {
             new VKCaptchaDialog(captchaError).show();
-            Log.w(TAG, "onCaptchaError");
         }
 
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
             VKSdk.authorize(VK_PERMISSIONS_SCOPE);
-            Log.e(TAG, "onTokenExpired");
         }
 
         @Override
         public void onAccessDenied(VKError authorizationError) {
-            Log.e(TAG, "onAccessDenied");
             new AlertDialog.Builder(VKUIHelper.getTopActivity()) // can't use context, get exception
                     .setMessage(authorizationError.errorMessage)
                     .show();
