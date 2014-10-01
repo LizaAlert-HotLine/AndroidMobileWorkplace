@@ -5,6 +5,7 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -28,6 +29,7 @@
             android:name=".ui.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
+        <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
     </application>
 
 </manifest>

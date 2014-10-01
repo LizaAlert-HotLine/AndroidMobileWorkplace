@@ -66,6 +66,11 @@
             android:text="EMAIL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_vk"
+            android:text="@string/vk_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </ScrollView>
 
