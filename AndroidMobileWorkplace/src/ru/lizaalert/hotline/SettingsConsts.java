@@ -91,8 +91,4 @@ public class SettingsConsts {
      */
     public final static String PREF_DESCR_RECENT = "pref_descr_recent";
 
-    /**
-     * {@value} Vkontakte token
-     */
-    public static final String VK_TOKEN = "pref_vk_token";
 }

@@ -61,21 +61,41 @@
 package ru.lizaalert.hotline.ui;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import ru.lizaalert.hotline.R;
+
+import com.vk.sdk.VKUIHelper;
 
 public class SettingsActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VKUIHelper.onCreate(this);
+        if (getFragmentManager().findFragmentByTag(SettingsFragment.class.getSimpleName()) != null) //this is important ot prevent multiple activities to be attached to single activity
+            return;
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
+                .replace(android.R.id.content, new SettingsFragment(), SettingsFragment.class.getSimpleName())
                 .commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 
 }
