@@ -112,6 +112,7 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_form);
+        VKUIHelper.onCreate(this);
 
         etPhone = (EditText) findViewById(R.id.et_phone);
         etPhone.setText(Settings.instance(getApplicationContext()).getPhoneApplRecent());

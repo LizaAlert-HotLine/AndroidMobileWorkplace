@@ -24,5 +24,8 @@
     <string name="vk_send_group_request_message">May be you need to sign up to the group</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="login_vk">Login VK</string>
+    <string name="logout_vk">Logout vk</string>
+    <string name="login_vk_successfull">Login vk successfull</string>
 
 </resources>

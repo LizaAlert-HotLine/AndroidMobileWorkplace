@@ -120,16 +120,19 @@ public class VkManager {
     };
 
     public void initVk() {
-        VKAccessToken token = VKAccessToken.tokenFromSharedPreferences(context, SettingsConsts.VK_TOKEN);
-        VKSdk.initialize(vkSdkListener, context.getString(R.string.vk_app_id), token);
-
+        VKSdk.initialize(vkSdkListener, context.getString(R.string.vk_app_id));
         VKSdk sdk = VKSdk.instance();
         sdk.setSdkListener(vkSdkListener);
+    }
 
+    private boolean loginIfNeeded() {
+        boolean isLoggedIn = VKSdk.isLoggedIn();
+        Log.d(TAG, "initVK is loggedIn ? " + isLoggedIn);
 
-        Log.d(TAG, "initVK is loggedIn ? " + VKSdk.isLoggedIn());
-        if (!VKSdk.isLoggedIn())
+        if (!isLoggedIn)
             VKSdk.authorize(VK_PERMISSIONS_SCOPE);
+
+        return isLoggedIn;
     }
 
     private final VKSdkListener vkSdkListener = new VKSdkListener() {
@@ -152,7 +155,7 @@ public class VkManager {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            newToken.saveTokenToSharedPreferences(context, SettingsConsts.VK_TOKEN);
+            Toast.makeText(context, R.string.login_vk_successfull, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -160,32 +163,34 @@ public class VkManager {
      * https://vk.com/dev/wall.post
      */
     public void requestWallPost(String message) {
-        VKParameters parameters = new VKParameters(VKParameters.from(
-                VKApiConst.OWNER_ID, COMMUNITY_ID,
-                VKApiConst.MESSAGE, message
-        ));
-        VKRequest request = VKApi.wall().post(parameters);
-        request.attempts = MAX_ATTEMPTS;
+        if (loginIfNeeded()) {
+            VKParameters parameters = new VKParameters(VKParameters.from(
+                    VKApiConst.OWNER_ID, COMMUNITY_ID,
+                    VKApiConst.MESSAGE, message
+            ));
+            VKRequest request = VKApi.wall().post(parameters);
+            request.attempts = MAX_ATTEMPTS;
 
-        request.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                Log.i(TAG, "resp: " + response.json);
-                Toast.makeText(context, R.string.post_successfull, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(VKError error) {
-                String errorMsg = error.errorCode + ": " + error.errorMessage;
-                Log.i(TAG, "requestWallPost error: " +errorMsg);
-                if (error.errorCode == -101){
-                    showDialog();
-                } else {
-                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+            request.executeWithListener(new VKRequest.VKRequestListener() {
+                @Override
+                public void onComplete(VKResponse response) {
+                    super.onComplete(response);
+                    Log.i(TAG, "resp: " + response.json);
+                    Toast.makeText(context, R.string.post_successfull, Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+
+                @Override
+                public void onError(VKError error) {
+                    String errorMsg = error.errorCode + ": " + error.errorMessage;
+                    Log.i(TAG, "requestWallPost error: " + errorMsg);
+                    if (error.errorCode == -101) {
+                        showDialog();
+                    } else {
+                        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     private void showDialog() { //TODO: check if user send a request already and change dialog message to, not still approved to comunity? wait little bit more.. or smthg..

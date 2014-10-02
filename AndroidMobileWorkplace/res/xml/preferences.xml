@@ -7,5 +7,9 @@
             android:title="@string/pref_phone"
             android:key="pref_phone_dest"
             android:inputType="phone"/>
+
+        <Preference
+            android:title="@string/login_vk"
+            android:key="pref_login_vk"/>
     </PreferenceCategory>
 </PreferenceScreen>
