@@ -1,26 +1,3 @@
-package ru.lizaalert.hotline;
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCaptchaDialog;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKSdkListener;
-import com.vk.sdk.VKUIHelper;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-
 /*
     Copyright (c) 2014 Denis Volyntsev <fortun777@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
@@ -80,6 +57,29 @@ import com.vk.sdk.api.VKResponse;
     shall not be used in advertising or otherwise to promote the sale, use or
     other dealings in this Software without prior written authorization.
  */
+
+package ru.lizaalert.hotline;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCaptchaDialog;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdkListener;
+import com.vk.sdk.VKUIHelper;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
 
 /**
  * This manager handles vk authorisation and a wall post to Lisa Alert Group.
