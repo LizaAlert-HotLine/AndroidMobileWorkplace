@@ -189,10 +189,13 @@ public class InputFormActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_yellow_pages:
+                startActivity(new Intent(this, YellowPagesActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

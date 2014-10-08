@@ -9,4 +9,10 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_yellow_pages"
+        android:orderInCategory="101"
+        android:title="Yellow pages"
+        app:showAsAction="never"/>
+
 </menu>
