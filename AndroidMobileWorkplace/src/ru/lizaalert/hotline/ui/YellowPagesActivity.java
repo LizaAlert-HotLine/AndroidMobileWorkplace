@@ -68,9 +68,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -86,15 +96,22 @@ import ru.lizaalert.hotline.SpreadsheetXmlParser;
 public class YellowPagesActivity extends Activity implements LoaderManager.LoaderCallbacks<List<SpreadsheetXmlParser.Entry>> {
 
     private static final String LOG_TAG = YellowPagesActivity.class.getSimpleName();
+    private static final String YELLO_PAGES_FILENAME = "yellow_pages";
+
     private final String YELLOW_PAGES_KEY = "18WABg03Ja4dJHJxVMqWBeEfFYs23D3ArCEuYgQGpk7s";
     private final String YELLOW_PAGES_URL = "http://spreadsheets.google.com/feeds/list/" + YELLOW_PAGES_KEY + "/od6/public/values";
     private SpreadsheetXmlParser parser;
     private List<SpreadsheetXmlParser.Entry> entries;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yellow_pages);
+
+//        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS); //
+        file = new File(getFilesDir(), YELLO_PAGES_FILENAME);
+
 
         getLoaderManager().initLoader(0, null, this).forceLoad();
         parser = SpreadsheetXmlParser.getInstance();
@@ -102,27 +119,103 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
 
     @Override
     public Loader<List<SpreadsheetXmlParser.Entry>> onCreateLoader(int id, Bundle args) {
-        return  new AsyncTaskLoader<List<SpreadsheetXmlParser.Entry>>(this) {
+        return new AsyncTaskLoader<List<SpreadsheetXmlParser.Entry>>(this) {
             @Override
             public List<SpreadsheetXmlParser.Entry> loadInBackground() {
 
                 List<SpreadsheetXmlParser.Entry> entries = null;
+
+                String xml = null;
                 try {
-                    URL url = new URL(YELLOW_PAGES_URL);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                    entries = parser.parse(in);
-
-                    urlConnection.disconnect();
-
-                } catch (Exception e) {
+                    xml = readFromFile();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                if (xml == null)
+                    try {
+                        URL url = new URL(YELLOW_PAGES_URL);
+                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                        xml = inputStreamToString(in);
+
+                        writeToFile(xml);
+
+                        in.close();
+                        urlConnection.disconnect();
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                if (xml != null)
+                    try {
+                        entries = parser.parse(new StringReader(xml));
+                    } catch (XmlPullParserException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 return entries;
             }
         };
     }
+
+    private void writeToFile(String data) {
+        try {
+            FileWriter out = new FileWriter(file);
+            out.write(data);
+            out.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    /**
+     * read a file and converting it to String using StringBuilder
+     */
+    public String readFromFile() throws IOException {
+        FileInputStream fStream = new FileInputStream(file);
+        String text = inputStreamToString(fStream);
+
+        fStream.close();
+        return text;
+    }
+
+    private String inputStreamToString(InputStream inputStream) throws IOException {
+        StringBuilder sbuilder;
+        BufferedReader input = null;
+        try {
+            input = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            sbuilder = new StringBuilder();
+            String str = input.readLine();
+
+            while (str != null) {
+                sbuilder.append(str);
+                str = input.readLine();
+                if (str != null) {
+                    sbuilder.append("\n");
+                }
+            }
+
+            Log.e(LOG_TAG, sbuilder.toString());
+            return sbuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            inputStream.close();
+            if (input != null)
+                input.close();
+
+        }
+
+        return null;
+    }
+
 
     @Override
     public void onLoadFinished(Loader<List<SpreadsheetXmlParser.Entry>> loader, List<SpreadsheetXmlParser.Entry> data) {
@@ -142,6 +235,5 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
     public void onLoaderReset(Loader<List<SpreadsheetXmlParser.Entry>> loader) {
         entries = null;
     }
-
 
 }
