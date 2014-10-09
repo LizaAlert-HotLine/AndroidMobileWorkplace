@@ -102,16 +102,12 @@ public class SpreadsheetXmlParser {
         return instance;
     }
 
-    public List<Entry> parse(StringReader reader) throws XmlPullParserException, IOException {
-//        try {
+    public List<Entry> parse(String xml) throws XmlPullParserException, IOException {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(reader);
+            parser.setInput(new StringReader(xml));
             parser.nextTag();
             return readFeed(parser);
-//        }catch (Exception e){
-//
-//        }
     }
 
     private List<Entry> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
