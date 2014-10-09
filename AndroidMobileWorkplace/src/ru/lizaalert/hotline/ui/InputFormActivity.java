@@ -60,11 +60,11 @@
 
 package ru.lizaalert.hotline.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -74,6 +74,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vk.sdk.VKUIHelper;
+
 import java.util.Calendar;
 
 import ru.lizaalert.hotline.ChannelHandler;
@@ -83,7 +84,7 @@ import ru.lizaalert.hotline.SmsChannel;
 import ru.lizaalert.hotline.VkManager;
 
 
-public class InputFormActivity extends ActionBarActivity implements View.OnClickListener, ChannelHandler {
+public class InputFormActivity extends Activity implements View.OnClickListener, ChannelHandler {
 
     private EditText etPhone;
     private EditText etCity;
