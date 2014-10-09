@@ -1,3 +1,63 @@
+/*
+    Copyright (c) 2014 Denis Volyntsev <fortun777@gmail.com>
+    Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
+
+    Этот файл является частью приложения "Мобильное рабочее место оператора
+    Горячей линии по пропавшим детям".
+
+    Данная лицензия разрешает лицам, получившим копию "Мобильного рабочего
+    места оператора Горячей линии по пропавшим детям" и сопутствующей
+    документации (в дальнейшем именуемыми «Программное Обеспечение»),
+    безвозмездно использовать Программное Обеспечение без ограничений, включая
+    неограниченное право на использование, копирование, изменение, добавление,
+    публикацию, распространение, сублицензирование и/или продажу копий
+    Программного Обеспечения, также как и лицам, которым предоставляется данное
+    Программное Обеспечение, при соблюдении следующих условий:
+
+    Указанное выше уведомление об авторском праве и данные условия должны быть
+    включены во все копии или значимые части данного Программного Обеспечения.
+
+    ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО
+    ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ
+    ОГРАНИЧИВАЯСЬ ГАРАНТИЯМИ ТОВАРНОЙ ПРИГОДНОСТИ, СООТВЕТСТВИЯ ПО ЕГО
+    КОНКРЕТНОМУ НАЗНАЧЕНИЮ И ОТСУТСТВИЯ НАРУШЕНИЙ ПРАВ. НИ В КАКОМ СЛУЧАЕ
+    АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ ОТВЕТСТВЕННОСТИ ПО ИСКАМ О ВОЗМЕЩЕНИИ
+    УЩЕРБА, УБЫТКОВ ИЛИ ДРУГИХ ТРЕБОВАНИЙ ПО ДЕЙСТВУЮЩИМ КОНТРАКТАМ, ДЕЛИКТАМ
+    ИЛИ ИНОМУ, ВОЗНИКШИМ ИЗ, ИМЕЮЩИМ ПРИЧИНОЙ ИЛИ СВЯЗАННЫМ С ПРОГРАММНЫМ
+    ОБЕСПЕЧЕНИЕМ ИЛИ ИСПОЛЬЗОВАНИЕМ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫМИ
+    ДЕЙСТВИЯМИ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ.
+
+    Кроме содержимого в этом уведомлении, ни название "Горячей линии по
+    пропавшим детям", ни название "Добровольного поискового отряда "Лиза
+    Алерт", ни имена вышеуказанных держателей авторских прав не должно быть
+    использовано в рекламе или иным способом, чтобы увеличивать продажу,
+    использование или другие работы в этом Программном обеспечении без
+    предшествующего письменного разрешения.
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+    Except as contained in this notice, the name of Liza Alert or the name of
+    Liza Alerts's hotline department or the name(s) the above copyright holders
+    shall not be used in advertising or otherwise to promote the sale, use or
+    other dealings in this Software without prior written authorization.
+ */
+
 package ru.lizaalert.hotline.ui;
 
 import android.app.ActionBar;
@@ -5,14 +65,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.Locale;
 
 import ru.lizaalert.hotline.R;
 
@@ -31,7 +90,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         assert actionBar != null;
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -53,29 +112,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
     }
 
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
@@ -91,8 +127,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+
+        private final String[] titles;
+
+        public SectionsPagerAdapter(Context context, FragmentManager fm) {
             super(fm);
+            titles = context.getResources().getStringArray(R.array.tabs);
         }
 
         @Override
@@ -101,29 +141,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 case 0:
                     return new InputFormFragment();
                 case 1:
-                    return new SettingsFragment();
+                    return new YellowPagesFragment();
             }
-//            return PlaceholderFragment.newInstance(position + 1);
             return null;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return titles.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
+            return titles[position];
         }
     }
 
@@ -135,12 +165,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_yellow_pages:
-                startActivity(new Intent(this, YellowPagesActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

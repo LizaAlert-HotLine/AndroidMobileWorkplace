@@ -29,9 +29,6 @@
             android:name="ru.lizaalert.hotline.ui.SettingsActivity"
             android:label="@string/action_settings"/>
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
-        <activity
-            android:name="ru.lizaalert.hotline.ui.YellowPagesActivity"
-            android:label="@string/title_activity_yellow_pages"/>
 
     </application>
 
