@@ -144,7 +144,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        VKUIHelper.onActivityResult(requestCode, resultCode, data);
         initVkPref();
     }
 }

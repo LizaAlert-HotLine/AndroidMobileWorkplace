@@ -26,5 +26,10 @@
     <string name="title_activity_yellow_pages">YellowPagesActivity</string>
     <string name="no_data">No data</string>
     <string name="no_data_retry_fetch">Could now load yellow pages, try to refresh once you have connection</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
