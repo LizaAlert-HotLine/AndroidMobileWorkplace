@@ -60,13 +60,17 @@
 
 package ru.lizaalert.hotline.ui;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -88,14 +92,11 @@ import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.SpreadsheetXmlParser;
 
 /**
- * This is a temporary solution working only to load and parse spreadsheet data.
- * Please make sure to publish the document to the web, before trying to access it via this app
- * You can find instruction on publishing document here http://josephfitzsimmons.com/getting-json-data-from-google-spreadsheets-and-using-it-in-google-maps/
- * To access desired spreadsheet instantiate YELLOW_PAGES_KEY constant with your key.
+ * Created by defuera on 10/10/14.
  */
-public class YellowPagesActivity extends Activity implements LoaderManager.LoaderCallbacks<List<SpreadsheetXmlParser.Entry>> {
+public class YellowPagesFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<SpreadsheetXmlParser.Entry>> {
 
-    private static final String LOG_TAG = YellowPagesActivity.class.getSimpleName();
+    private static final String LOG_TAG = YellowPagesFragment.class.getSimpleName();
     private static final String YELLO_PAGES_FILENAME = "yellow_pages";
     private static final int LOCAL_DATA_LOADER_ID = 0;
 
@@ -104,12 +105,30 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
     private SpreadsheetXmlParser parser;
     private List<SpreadsheetXmlParser.Entry> entries;
     private File file;
+    private View contentView;
+
+
+    public View findViewById(int id) {
+        if (contentView == null) {
+            return null;
+        }
+        return contentView.findViewById(id);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        contentView = super.onCreateView(inflater, container, savedInstanceState);
+        if (contentView == null) {
+            contentView = inflater.inflate(R.layout.activity_yellow_pages, container, false);
+        }
+        return contentView;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yellow_pages);
-        file = new File(getFilesDir(), YELLO_PAGES_FILENAME);
+        file = new File(getActivity().getFilesDir(), YELLO_PAGES_FILENAME);
 
         getLoaderManager().initLoader(LOCAL_DATA_LOADER_ID, null, this).forceLoad();
         parser = SpreadsheetXmlParser.getInstance();
@@ -117,7 +136,7 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
 
     @Override
     public Loader<List<SpreadsheetXmlParser.Entry>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<SpreadsheetXmlParser.Entry>>(this) {
+        return new AsyncTaskLoader<List<SpreadsheetXmlParser.Entry>>(getActivity()) {
             @Override
             public List<SpreadsheetXmlParser.Entry> loadInBackground() {
 
@@ -166,7 +185,7 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
 
     /**
      * Fetchs yellow pages from server.
-     *
+     * <p/>
      * On load writes data to file and displays it if nothing has been displayed yet
      */
     private void fetchDataAsync() {
@@ -192,7 +211,7 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
             protected void onPostExecute(List<SpreadsheetXmlParser.Entry> data) {
                 super.onPostExecute(data);
 
-                if (YellowPagesActivity.this.entries == null) //activity isn't stopped and no data has been shown yet
+                if (YellowPagesFragment.this.entries == null) //activity isn't stopped and no data has been shown yet
                     if (data != null)
                         processData(data);
                     else
@@ -202,7 +221,7 @@ public class YellowPagesActivity extends Activity implements LoaderManager.Loade
     }
 
     private void showNoDataMessage() {
-        Toast.makeText(this, R.string.no_data_retry_fetch, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.no_data_retry_fetch, Toast.LENGTH_SHORT).show();
     }
 
     /**

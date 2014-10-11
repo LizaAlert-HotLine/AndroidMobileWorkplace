@@ -60,16 +60,17 @@
 
 package ru.lizaalert.hotline.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -83,8 +84,11 @@ import ru.lizaalert.hotline.Settings;
 import ru.lizaalert.hotline.SmsChannel;
 import ru.lizaalert.hotline.VkManager;
 
+/**
+ * Created by defuera on 09/10/14.
+ */
+public class InputFormFragment extends Fragment implements View.OnClickListener, ChannelHandler {
 
-public class InputFormActivity extends Activity implements View.OnClickListener, ChannelHandler {
 
     private EditText etPhone;
     private EditText etCity;
@@ -92,31 +96,45 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
     private EditText etBirthday;
     private EditText etDescr;
 
-    private SmsChannel smsChannel = new SmsChannel(this);
+    private SmsChannel smsChannel = new SmsChannel(getActivity());
     private VkManager vkManager;
+    private View contentView;
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        VKUIHelper.onResume(this);
-        vkManager = VkManager.getInstance(this);
+        VKUIHelper.onResume(getActivity());
+        vkManager = VkManager.getInstance(getActivity());
         vkManager.initVk();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        VKUIHelper.onDestroy(this);
+        VKUIHelper.onDestroy(getActivity());
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_form);
-        VKUIHelper.onCreate(this);
+    public View findViewById(int id) {
+        if (contentView == null) {
+            return null;
+        }
+        return contentView.findViewById(id);
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        contentView = super.onCreateView(inflater, container, savedInstanceState);
+        if (contentView == null) {
+            contentView = inflater.inflate(R.layout.fragment_input_form, container, false);
+            initUi();
+        }
+        return contentView;
+    }
+
+    private void initUi() {
         etPhone = (EditText) findViewById(R.id.et_phone);
-        etPhone.setText(Settings.instance(getApplicationContext()).getPhoneApplRecent());
+        etPhone.setText(Settings.instance(getActivity().getApplicationContext()).getPhoneApplRecent());
 
         etCity = (EditText) findViewById(R.id.et_city);
         etCity.setText(Settings.instance().getCityRecent());
@@ -172,33 +190,9 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.input_form, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_yellow_pages:
-                startActivity(new Intent(this, YellowPagesActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        VKUIHelper.onCreate(getActivity());
     }
 
     private void clearInput() {
@@ -219,12 +213,12 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
             case R.id.btn_sms:
 
                 if (Settings.instance().getPhoneDest().equals("")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(getString(R.string.error_no_phone));
                     builder.setPositiveButton(getString(R.string.got_it), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            startActivity(new Intent(InputFormActivity.this, SettingsActivity.class));
+                            startActivity(new Intent(getActivity(), SettingsActivity.class));
                             dialogInterface.dismiss();
                         }
                     });
@@ -235,7 +229,7 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
 
                 break;
             case R.id.btn_email:
-                Toast.makeText(this, "This is dummy Email button", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "getActivity() is dummy Email button", Toast.LENGTH_LONG).show();
                 break;
             case R.id.btn_vk:
                 vkManager.requestWallPost(composeMessage());
@@ -258,7 +252,7 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void sent(Calendar c) {
-        Toast.makeText(this, "Sent at " + c.getTime(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Sent at " + c.getTime(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -268,7 +262,7 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void delivered(Calendar c) {
-        Toast.makeText(this, "Delivered at " + c.getTime(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Delivered at " + c.getTime(), Toast.LENGTH_LONG).show();
     }
 
     abstract class SimpleTextWatcher implements TextWatcher {
@@ -285,10 +279,5 @@ public class InputFormActivity extends Activity implements View.OnClickListener,
 
         @Override
         public abstract void afterTextChanged(Editable editable);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        VKUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 }
