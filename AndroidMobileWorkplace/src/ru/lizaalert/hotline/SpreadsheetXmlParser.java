@@ -66,7 +66,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +74,6 @@ import java.util.List;
  * This is an xml parser of spreadsheet data.
  * It parses 4 string columns of the spreadsheet: region, name, phone and description,
  * which compose an Entry structure.
- *
  */
 public class SpreadsheetXmlParser {
     @SuppressWarnings("UnusedDeclaration")
@@ -103,16 +102,12 @@ public class SpreadsheetXmlParser {
         return instance;
     }
 
-    public List<Entry> parse(InputStream in) throws XmlPullParserException, IOException {
-        try {
+    public List<Entry> parse(String xml) throws XmlPullParserException, IOException {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
+            parser.setInput(new StringReader(xml));
             parser.nextTag();
             return readFeed(parser);
-        } finally {
-            in.close();
-        }
     }
 
     private List<Entry> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -146,13 +141,13 @@ public class SpreadsheetXmlParser {
                 continue;
             }
             String tag = parser.getName();
-            if (tag.equals(ns+"region")) {
+            if (tag.equals(ns + "region")) {
                 region = readString(parser, tag);
-            } else if (tag.equals(ns+"name")) {
+            } else if (tag.equals(ns + "name")) {
                 name = readString(parser, tag);
-            } else if (tag.equals(ns+"phone")) {
+            } else if (tag.equals(ns + "phone")) {
                 phone = readString(parser, tag);
-            } else if (tag.equals(ns+"description")) {
+            } else if (tag.equals(ns + "description")) {
                 description = readString(parser, tag);
             } else {
                 skip(parser);

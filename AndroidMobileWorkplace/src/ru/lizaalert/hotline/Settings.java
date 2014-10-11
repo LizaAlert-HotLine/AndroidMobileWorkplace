@@ -135,6 +135,14 @@ public class Settings {
     }
 
     /**
+     * Get last time yellow pages were updated
+     * @return long
+     */
+    public long getUpdateYellowPages() {
+        return sharedPreferences.getLong(SettingsConsts.PREF_UPDATE_YELLOW_PAGES, 0);
+    }
+
+    /**
      * Set last entered applicant's phone number
      * @param phoneNumber String
      */
@@ -181,6 +189,16 @@ public class Settings {
     public void setDescrRecent(String descrRecent) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SettingsConsts.PREF_DESCR_RECENT, descrRecent);
+        editor.apply();
+    }
+
+    /**
+     * Set last time yellow pages where updated
+     * @param lastUpdate long
+     */
+    public void setUpdateYellowPages(long lastUpdate) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(SettingsConsts.PREF_UPDATE_YELLOW_PAGES, lastUpdate);
         editor.apply();
     }
 
