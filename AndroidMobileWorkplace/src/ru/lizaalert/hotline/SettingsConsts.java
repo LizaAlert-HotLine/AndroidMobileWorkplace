@@ -91,4 +91,8 @@ public class SettingsConsts {
      */
     public final static String PREF_DESCR_RECENT = "pref_descr_recent";
 
+    /**
+     * {@value} last time yellow pages were updated
+     */
+    public static final String PREF_UPDATE_YELLOW_PAGES = "pref_update_yellow_pages";
 }

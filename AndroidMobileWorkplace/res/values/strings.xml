@@ -15,15 +15,18 @@
     <string name="pref_general">General</string>
     <string name="pref_phone">Phone number</string>
     <string name="vk_group">VK GROUP</string>
-    <string name="post_successfull">Post successfull</string>
-    <string name="vk_send_group_request_title">Oops, error occured</string>
+    <string name="post_successful">Post successful</string>
+    <string name="vk_send_group_request_title">Oops, error occurred</string>
     <string name="vk_send_group_request_message">May be you need to sign up to the group</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="login_vk">Login VK</string>
     <string name="logout_vk">Logout vk</string>
-    <string name="login_vk_successfull">Login vk successfull</string>
-    <string name="title_activity_yellow_pages">YellowPagesActivity</string>
+    <string name="login_vk_successful">Login vk successful</string>
+    <string name="title_fragment_yellow_pages">YellowPagesActivity</string>
+    <string name="title_fragment_input">Input Fragment</string>
     <string name="no_data">No data</string>
+    <string name="no_data_retry_fetch">Could now load yellow pages, try to refresh once you have connection</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

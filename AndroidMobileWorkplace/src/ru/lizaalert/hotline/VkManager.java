@@ -155,7 +155,7 @@ public class VkManager {
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            Toast.makeText(context, R.string.login_vk_successfull, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.login_vk_successful, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -176,7 +176,7 @@ public class VkManager {
                 public void onComplete(VKResponse response) {
                     super.onComplete(response);
                     Log.i(TAG, "resp: " + response.json);
-                    Toast.makeText(context, R.string.post_successfull, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.post_successful, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

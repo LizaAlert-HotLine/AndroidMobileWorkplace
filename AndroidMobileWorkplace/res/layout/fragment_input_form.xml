@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionNext|flagNoExtractUi"
             android:inputType="phone" />
         <EditText
             android:id="@+id/et_city"
@@ -32,21 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:imeOptions="actionNext" />
+            android:imeOptions="actionNext|flagNoExtractUi" />
         <EditText
             android:id="@+id/et_name"
             android:hint="@string/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:imeOptions="actionNext" />
+            android:imeOptions="actionNext|flagNoExtractUi" />
         <EditText
             android:id="@+id/et_birthday"
             android:hint="@string/date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionNext|flagNoExtractUi"
             android:inputType="date" />
         <EditText
             android:id="@+id/et_descr"
@@ -55,7 +55,7 @@
             android:lines="10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone|flagNoExtractUi" />
         <Button
             android:id="@+id/btn_sms"
             android:text="SMS"
