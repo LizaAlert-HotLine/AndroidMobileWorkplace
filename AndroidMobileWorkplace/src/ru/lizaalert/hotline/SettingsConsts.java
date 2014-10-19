@@ -92,7 +92,7 @@ public class SettingsConsts {
     public final static String PREF_DESCR_RECENT = "pref_descr_recent";
 
     /**
-     * {@value} last time yellow pages were updated
+     * {@value} last chosen organization region position in Yellow Pages
      */
-    public static final String PREF_UPDATE_YELLOW_PAGES = "pref_update_yellow_pages";
+    public static final String PREF_ORGANIZATION_REGION_POSITION = "pref_organization_region_position";
 }
