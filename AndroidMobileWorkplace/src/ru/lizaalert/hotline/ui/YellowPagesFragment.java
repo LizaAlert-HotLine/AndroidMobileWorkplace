@@ -95,6 +95,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.lizaalert.hotline.R;
+import ru.lizaalert.hotline.Settings;
 import ru.lizaalert.hotline.SpreadsheetXmlParser;
 import ru.lizaalert.hotline.adapters.OrganizationsArrayAdapter;
 
@@ -142,6 +143,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String filter = spinnerAdapter.getItem(position);
                     organizationsAdapter.applyFilter(filter);
+                    Settings.instance(getActivity()).setLastOrganizationsRegionPosition(position);
                 }
 
                 @Override
@@ -156,7 +158,6 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.w(LOG_TAG," click on item "+position+" "+organizationsAdapter.getItem(position).name);
                     TextView description = ((TextView) view.findViewById(R.id.descriprion));
                     if (description.getLineCount() == 4)
                         description.setMaxLines(Integer.MAX_VALUE);
@@ -225,6 +226,8 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
     private void processData(List<SpreadsheetXmlParser.Entry> data) {
         getRegions(data);
         spinnerAdapter.notifyDataSetChanged();
+        spinner.setSelection( Settings.instance(getActivity()).getLastOrganizationsRegionPosition());
+
         organizationsAdapter.swapData(entries);
     }
 

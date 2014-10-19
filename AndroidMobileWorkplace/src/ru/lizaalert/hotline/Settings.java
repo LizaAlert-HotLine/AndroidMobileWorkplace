@@ -63,6 +63,7 @@ package ru.lizaalert.hotline;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Settings {
 
@@ -135,11 +136,11 @@ public class Settings {
     }
 
     /**
-     * Get last time yellow pages were updated
-     * @return long
+     *  Get last chosen organization region position in Yellow Pages
+     * @return int
      */
-    public long getUpdateYellowPages() {
-        return sharedPreferences.getLong(SettingsConsts.PREF_UPDATE_YELLOW_PAGES, 0);
+    public int getLastOrganizationsRegionPosition() {
+        return sharedPreferences.getInt(SettingsConsts.PREF_ORGANIZATION_REGION_POSITION, 0);
     }
 
     /**
@@ -193,13 +194,14 @@ public class Settings {
     }
 
     /**
-     * Set last time yellow pages where updated
-     * @param lastUpdate long
+     *  Set last chosen organization region position
+     * @param position int
      */
-    public void setUpdateYellowPages(long lastUpdate) {
+    public void setLastOrganizationsRegionPosition(int position) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(SettingsConsts.PREF_UPDATE_YELLOW_PAGES, lastUpdate);
+        editor.putInt(SettingsConsts.PREF_ORGANIZATION_REGION_POSITION, position);
         editor.apply();
+        Log.w("lol", "setLastOrganizationsRegionPosition " + position);
     }
 
     /**
@@ -213,4 +215,5 @@ public class Settings {
         setBirthdayRecent("");
         setDescrRecent("");
     }
+
 }
