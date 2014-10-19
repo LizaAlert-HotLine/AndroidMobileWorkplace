@@ -24,7 +24,7 @@ public class OrganizationsArrayAdapter extends ArrayAdapter<Entry> {
 
     private final Context context;
     private List<Entry> entries;
-    private List<Entry> filteredData = new ArrayList<>();
+    private List<Entry> filteredData = new ArrayList<Entry>();
     private ViewHolder viewHolder;
 
     public OrganizationsArrayAdapter(Context context, List<Entry> entries) {
