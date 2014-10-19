@@ -208,13 +208,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<List<SpreadsheetXmlParser.Entry>> loader, List<SpreadsheetXmlParser.Entry> data) {
-
-        entries = data;
-        if (data != null) {
-            processData(data);
-        } else {
-            Log.e(LOG_TAG, " data is null");
-        }
+        displayData(data);
         fetchDataAsync();
     }
 
@@ -223,15 +217,20 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
         entries = null;
     }
 
-    private void processData(List<SpreadsheetXmlParser.Entry> data) {
-        getRegions(data);
-        spinnerAdapter.notifyDataSetChanged();
-        spinner.setSelection( Settings.instance(getActivity()).getLastOrganizationsRegionPosition());
+    private void displayData(List<SpreadsheetXmlParser.Entry> data) {
+        entries = data;
+        if (data != null) {
+            getRegions();
+            spinnerAdapter.notifyDataSetChanged();
+            spinner.setSelection(Settings.instance(getActivity()).getLastOrganizationsRegionPosition());
 
-        organizationsAdapter.swapData(entries);
+            organizationsAdapter.swapData(entries);
+        } else {
+            showNoDataMessage();
+        }
     }
 
-    private void getRegions(List<SpreadsheetXmlParser.Entry> entries) {
+    private void getRegions() {
         for (SpreadsheetXmlParser.Entry e : entries) {
             if (!regions.contains(e.region))
                 regions.add(e.region);
@@ -266,10 +265,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
                 super.onPostExecute(data);
 
                 if (YellowPagesFragment.this.entries == null) //activity isn't stopped and no data has been shown yet
-                    if (data != null)
-                        processData(data);
-                    else
-                        showNoDataMessage();
+                    displayData(data);
             }
         }.execute();
     }
