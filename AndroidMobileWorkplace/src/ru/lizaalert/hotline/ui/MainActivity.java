@@ -72,6 +72,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import ru.lizaalert.hotline.R;
 
@@ -100,6 +101,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                if (position == 1) {
+                    if (getCurrentFocus() != null) {
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+                }
+
             }
         });
 
@@ -137,7 +145,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
+            switch (position) {
                 case 0:
                     return new InputFormFragment();
                 case 1:

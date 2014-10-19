@@ -71,6 +71,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -84,12 +89,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.SpreadsheetXmlParser;
+import ru.lizaalert.hotline.adapters.OrganizationsArrayAdapter;
 
 /**
  * Created by defuera on 10/10/14.
@@ -106,6 +113,11 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
     private List<SpreadsheetXmlParser.Entry> entries;
     private File file;
     private View contentView;
+    private List<String> regions = new ArrayList<>();
+    private Spinner spinner;
+    private ArrayAdapter<String> spinnerAdapter;
+    private ListView list;
+    private OrganizationsArrayAdapter organizationsAdapter;
 
 
     public View findViewById(int id) {
@@ -120,7 +132,39 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = super.onCreateView(inflater, container, savedInstanceState);
         if (contentView == null) {
-            contentView = inflater.inflate(R.layout.activity_yellow_pages, container, false);
+            contentView = inflater.inflate(R.layout.fragment_yellow_pages, container, false);
+
+            spinner = (Spinner) findViewById(R.id.spinner);
+            spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, regions);
+            spinner.setAdapter(spinnerAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String filter = spinnerAdapter.getItem(position);
+                    organizationsAdapter.applyFilter(filter);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            list = (ListView) findViewById(R.id.list);
+            organizationsAdapter = new OrganizationsArrayAdapter(getActivity(), entries);
+            list.setAdapter(organizationsAdapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.w(LOG_TAG," click on item "+position+" "+organizationsAdapter.getItem(position).name);
+                    TextView description = ((TextView) view.findViewById(R.id.descriprion));
+                    if (description.getLineCount() == 4)
+                        description.setMaxLines(Integer.MAX_VALUE);
+                    else
+                        description.setMaxLines(4);
+                    view.invalidate();
+                }
+            });
         }
         return contentView;
     }
@@ -151,10 +195,8 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
 
                 if (xml != null)
                     try {
-                        entries = parser.parse(xml);
-                    } catch (XmlPullParserException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                        entries = parser.parse(xml); //TODO: fix npe here
+                    } catch (XmlPullParserException | IOException e) {
                         e.printStackTrace();
                     }
 
@@ -165,8 +207,12 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<List<SpreadsheetXmlParser.Entry>> loader, List<SpreadsheetXmlParser.Entry> data) {
+
+        entries = data;
         if (data != null) {
             processData(data);
+        } else {
+            Log.e(LOG_TAG, " data is null");
         }
         fetchDataAsync();
     }
@@ -177,10 +223,17 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
     }
 
     private void processData(List<SpreadsheetXmlParser.Entry> data) {
-        for (SpreadsheetXmlParser.Entry e : data) {
-            Log.d(LOG_TAG, "e: " + e.region + " " + e.name + " " + e.phone + " " + e.description);
-            this.entries = data;
+        getRegions(data);
+        spinnerAdapter.notifyDataSetChanged();
+        organizationsAdapter.swapData(entries);
+    }
+
+    private void getRegions(List<SpreadsheetXmlParser.Entry> entries) {
+        for (SpreadsheetXmlParser.Entry e : entries) {
+            if (!regions.contains(e.region))
+                regions.add(e.region);
         }
+        Log.d(LOG_TAG, "regions " + Arrays.toString(regions.toArray()));
     }
 
     /**
@@ -198,9 +251,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
                     String xml = fetchData();
                     if (xml != null)
                         entries = parser.parse(xml);
-                } catch (XmlPullParserException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (XmlPullParserException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -243,8 +294,6 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
             in.close();
             urlConnection.disconnect();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
