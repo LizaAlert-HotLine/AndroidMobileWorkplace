@@ -96,7 +96,7 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
     private EditText etBirthday;
     private EditText etDescr;
 
-    private SmsChannel smsChannel = new SmsChannel(getActivity());
+    private SmsChannel smsChannel;
     private VkManager vkManager;
     private View contentView;
 
@@ -239,7 +239,7 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
 
     private void sendSms() {
         String result = composeMessage();
-        smsChannel.send(result, Settings.instance().getPhoneDest(), this);
+        (new SmsChannel(getActivity())).send(result, Settings.instance().getPhoneDest(), this);
     }
 
     private String composeMessage() {
