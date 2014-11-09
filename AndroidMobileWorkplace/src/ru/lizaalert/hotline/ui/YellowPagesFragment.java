@@ -114,7 +114,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
     private List<SpreadsheetXmlParser.Entry> entries;
     private File file;
     private View contentView;
-    private List<String> regions = new ArrayList<String>();
+    private List<String> regions = new ArrayList<>();
     private Spinner spinner;
     private ArrayAdapter<String> spinnerAdapter;
     private ListView list;
@@ -136,7 +136,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
             contentView = inflater.inflate(R.layout.fragment_yellow_pages, container, false);
 
             spinner = (Spinner) findViewById(R.id.spinner);
-            spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, regions);
+            spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, regions);
             spinner.setAdapter(spinnerAdapter);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -197,9 +197,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
                 if (xml != null)
                     try {
                         entries = parser.parse(xml); //TODO: fix npe here
-                    } catch (XmlPullParserException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (XmlPullParserException | IOException e) {
                         e.printStackTrace();
                     }
 
@@ -255,9 +253,7 @@ public class YellowPagesFragment extends Fragment implements LoaderManager.Loade
                     String xml = fetchData();
                     if (xml != null)
                         entries = parser.parse(xml);
-                } catch (XmlPullParserException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (XmlPullParserException | IOException e) {
                     e.printStackTrace();
                 }
 
