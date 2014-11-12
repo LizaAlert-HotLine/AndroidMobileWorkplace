@@ -58,128 +58,91 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.ui;
+package ru.lizaalert.hotline.yp;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 import ru.lizaalert.hotline.R;
-import ru.lizaalert.hotline.yp.ui.YellowPagesFragment;
+import ru.lizaalert.hotline.yp.YPEntry;
+import ru.lizaalert.hotline.yp.YPRegion;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+import static ru.lizaalert.hotline.SpreadsheetXmlParser.Entry;
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
+public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter {
+    private static final String TAG = "8800";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private ViewHolder viewHolder;
 
-        // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
-        assert actionBar != null;
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    private int viewId;
+    private int organizationId;
+    private int phonesId;
+    private int descriptionId;
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
+    public YPOrganizationsAdapter(Context context,
+                                  RealmResults<YPEntry> realmResults,
+                                  boolean automaticUpdate,
+                                  int viewId,
+                                  int organizationId,
+                                  int phonesId,
+                                  int descriptionId) {
+        super(context, realmResults, automaticUpdate);
+        this.viewId = viewId;
+        this.organizationId = organizationId;
+        this.phonesId = phonesId;
+        this.descriptionId = descriptionId;
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-                if (position == 1) {
-                    if (getCurrentFocus() != null) {
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    }
-                }
-
-            }
-        });
-
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
-        }
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(viewId, parent, false);
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+            // well set up the ViewHolder
+            viewHolder = new ViewHolder();
+            viewHolder.organizationName = (TextView) convertView.findViewById(organizationId);
+            viewHolder.phones = (TextView) convertView.findViewById(phonesId);
+            viewHolder.description = (TextView) convertView.findViewById(descriptionId);
 
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+            // store the holder with the view.
+            convertView.setTag(viewHolder);
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-
-        private final String[] titles;
-
-        public SectionsPagerAdapter(Context context, FragmentManager fm) {
-            super(fm);
-            titles = context.getResources().getStringArray(R.array.tabs);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new InputFormFragment();
-                case 1:
-                    return new YellowPagesFragment();
-            }
-            return null;
+        // object item based on the position
+        YPEntry item = getItem(position);
+
+        // assign values if the object is not null
+        if (item != null) {
+            // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
+            viewHolder.organizationName.setText(item.getName());
+            viewHolder.phones.setText(item.getPhone().replace(" ", "\n"));
+            viewHolder.description.setText(item.getDescription());
+
+//            Log.i(LOG_TAG, "display item " + position + " " + item.name);
         }
 
-        @Override
-        public int getCount() {
-            return titles.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles[position];
-        }
+        return convertView;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.input_form, menu);
-        return true;
+    class ViewHolder {
+        public TextView organizationName;
+        public TextView phones;
+        public TextView description;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

@@ -94,5 +94,11 @@ public class SettingsConsts {
     /**
      * {@value} last chosen organization region position in Yellow Pages
      */
-    public static final String PREF_ORGANIZATION_REGION_POSITION = "pref_organization_region_position";
+    public static final String PREF_YELLOW_PAGES_REGION = "pref_organization_region";
+
+    /**
+     * {@value} last chosen organization region position in Yellow Pages
+     */
+    public static final String PREF_YELLOW_PAGES_LIST_POSITION = "pref_yellow_pages_list_position";
+
 }

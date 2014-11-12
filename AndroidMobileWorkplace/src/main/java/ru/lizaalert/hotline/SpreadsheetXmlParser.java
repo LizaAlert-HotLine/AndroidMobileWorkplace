@@ -88,7 +88,7 @@ public class SpreadsheetXmlParser {
         public final String phone;
         public final String description;
 
-        private Entry(String region, String name, String phone, String description) {
+        public Entry(String region, String name, String phone, String description) {
             this.name = name;
             this.phone = phone;
             this.description = description;

@@ -66,6 +66,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Settings {
+    private static final String TAG = "8800";
 
     public static Settings self;
     private Context context;
@@ -104,46 +105,6 @@ public class Settings {
     }
 
     /**
-     * Get last entered city of loss
-     * @return String
-     */
-    public String getCityRecent() {
-        return sharedPreferences.getString(SettingsConsts.PREF_CITY_RECENT, "");
-    }
-
-    /**
-     * Get last entered name
-     * @return String
-     */
-    public String getNameRecent() {
-        return sharedPreferences.getString(SettingsConsts.PREF_NAME_RECENT, "");
-    }
-
-    /**
-     * Get last entered date of birth
-     * @return String
-     */
-    public String getBirthdayRecent() {
-        return sharedPreferences.getString(SettingsConsts.PREF_BIRTHDAY_RECENT, "");
-    }
-
-    /**
-     * Get last entered description
-     * @return String
-     */
-    public String getDescrRecent() {
-        return sharedPreferences.getString(SettingsConsts.PREF_DESCR_RECENT, "");
-    }
-
-    /**
-     *  Get last chosen organization region position in Yellow Pages
-     * @return int
-     */
-    public int getLastOrganizationsRegionPosition() {
-        return sharedPreferences.getInt(SettingsConsts.PREF_ORGANIZATION_REGION_POSITION, 0);
-    }
-
-    /**
      * Set last entered applicant's phone number
      * @param phoneNumber String
      */
@@ -151,6 +112,14 @@ public class Settings {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SettingsConsts.PREF_PHONE_APPL_RECENT, phoneNumber);
         editor.apply();
+    }
+    
+    /**
+     * Get last entered city of loss
+     * @return String
+     */
+    public String getCityRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_CITY_RECENT, "");
     }
 
     /**
@@ -164,6 +133,14 @@ public class Settings {
     }
 
     /**
+     * Get last entered name
+     * @return String
+     */
+    public String getNameRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_NAME_RECENT, "");
+    }
+
+    /**
      * Set last entered name
      * @param nameRecent String
      */
@@ -174,6 +151,14 @@ public class Settings {
     }
 
     /**
+     * Get last entered date of birth
+     * @return String
+     */
+    public String getBirthdayRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_BIRTHDAY_RECENT, "");
+    }
+
+    /**
      * Set last entered date of birth
      * @param birthdayRecent String
      */
@@ -181,6 +166,14 @@ public class Settings {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SettingsConsts.PREF_BIRTHDAY_RECENT, birthdayRecent);
         editor.apply();
+    }
+    
+    /**
+     * Get last entered description
+     * @return String
+     */
+    public String getDescrRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_DESCR_RECENT, "");
     }
 
     /**
@@ -194,15 +187,42 @@ public class Settings {
     }
 
     /**
-     *  Set last chosen organization region position
+     *  Get last position in the list of entries
+     * @return int
+     */
+    public int getYellowPagesLastListPosition() {
+        return sharedPreferences.getInt(SettingsConsts.PREF_YELLOW_PAGES_LIST_POSITION, 0);
+    }
+    
+    /**
+     *  Set last position in the list of entries
      * @param position int
      */
-    public void setLastOrganizationsRegionPosition(int position) {
+    public void setYellowPagesLastListPosition(int position) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(SettingsConsts.PREF_ORGANIZATION_REGION_POSITION, position);
+        editor.putInt(SettingsConsts.PREF_YELLOW_PAGES_LIST_POSITION, position);
         editor.apply();
-        Log.w("lol", "setLastOrganizationsRegionPosition " + position);
     }
+
+    /**
+     * Get Yellow Pages region
+     * @return String
+     */
+    public String getYellowPagesRegion() {
+        return sharedPreferences.getString(SettingsConsts.PREF_YELLOW_PAGES_REGION, "Москва");
+    }
+
+    /**
+     * Set last entered description
+     * @param ypRegion String
+     */
+    public void setYellowPagesRegion(String ypRegion) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_YELLOW_PAGES_REGION, ypRegion);
+        editor.apply();
+    }
+
+
 
     /**
      * Clear last entered values
@@ -215,5 +235,7 @@ public class Settings {
         setBirthdayRecent("");
         setDescrRecent("");
     }
+
+
 
 }
