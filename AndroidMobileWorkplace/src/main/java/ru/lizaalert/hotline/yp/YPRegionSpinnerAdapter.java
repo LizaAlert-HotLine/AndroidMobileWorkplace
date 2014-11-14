@@ -72,8 +72,8 @@ public class YPRegionSpinnerAdapter extends RealmBaseAdapter<YPRegion> implement
     int viewId;
     int elementId;
 
-    private class MyViewHolder {
-        TextView tvTimeStamp;
+    private static class MyViewHolder {
+        TextView regionNameView;
     }
 
     public YPRegionSpinnerAdapter(Context context,
@@ -92,21 +92,20 @@ public class YPRegionSpinnerAdapter extends RealmBaseAdapter<YPRegion> implement
 
         if (convertView == null) {
             convertView = inflater.inflate(viewId, null);
+
             mViewHolder = new MyViewHolder();
+            TextView tv = (TextView) convertView.findViewById(elementId);
+            mViewHolder.regionNameView = tv;
+
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
-        mViewHolder.tvTimeStamp = detail(convertView,
-                elementId,
-                realmResults.get(position).getRegion());
-        return convertView;
-    }
+        mViewHolder.regionNameView.setText(
+                realmResults.get(position).getRegion()
+        );
 
-    private TextView detail(View v, int resId, String text) {
-        TextView tv = (TextView) v.findViewById(resId);
-        tv.setText(text);
-        return tv;
+        return convertView;
     }
 }

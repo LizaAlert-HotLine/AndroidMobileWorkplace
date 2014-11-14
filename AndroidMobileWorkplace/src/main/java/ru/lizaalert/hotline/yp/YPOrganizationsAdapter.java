@@ -140,7 +140,7 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         return convertView;
     }
 
-    class ViewHolder {
+    private static class ViewHolder {
         public TextView organizationName;
         public TextView phones;
         public TextView description;
