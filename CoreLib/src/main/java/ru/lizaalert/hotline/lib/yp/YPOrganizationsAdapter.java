@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Igor Tseglevskiy <igor.tseglevskiy@gmail.com>
+    Copyright (c) 2014 Denis Volyntsev <fortun777@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
@@ -58,45 +58,83 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.yp;
+package ru.lizaalert.hotline.lib.yp;
 
-import io.realm.RealmObject;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
-public class YPEntry extends RealmObject {
-    private YPRegion region;
-    private String name;
-    private String phone;
-    private String description;
 
-    public YPRegion getRegion() {
-        return region;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
+
+
+public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter {
+    private static final String TAG = "8800";
+
+    private ViewHolder viewHolder;
+
+    private int viewId;
+    private int organizationId;
+    private int phonesId;
+    private int descriptionId;
+
+    public YPOrganizationsAdapter(Context context,
+                                  RealmResults<YPEntry> realmResults,
+                                  boolean automaticUpdate,
+                                  int viewId,
+                                  int organizationId,
+                                  int phonesId,
+                                  int descriptionId) {
+        super(context, realmResults, automaticUpdate);
+        this.viewId = viewId;
+        this.organizationId = organizationId;
+        this.phonesId = phonesId;
+        this.descriptionId = descriptionId;
+
     }
 
-    public void setRegion(YPRegion region) {
-        this.region = region;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(viewId, parent, false);
+
+            // well set up the ViewHolder
+            viewHolder = new ViewHolder();
+            viewHolder.organizationName = (TextView) convertView.findViewById(organizationId);
+            viewHolder.phones = (TextView) convertView.findViewById(phonesId);
+            viewHolder.description = (TextView) convertView.findViewById(descriptionId);
+
+            // store the holder with the view.
+            convertView.setTag(viewHolder);
+
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        // object item based on the position
+        YPEntry item = getItem(position);
+
+        // assign values if the object is not null
+        if (item != null) {
+            // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
+            viewHolder.organizationName.setText(item.getName());
+            viewHolder.phones.setText(item.getPhone().replace(" ", "\n"));
+            viewHolder.description.setText(item.getDescription());
+
+//            Log.i(LOG_TAG, "display item " + position + " " + item.name);
+        }
+
+        return convertView;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    private static class ViewHolder {
+        public TextView organizationName;
+        public TextView phones;
+        public TextView description;
     }
 }

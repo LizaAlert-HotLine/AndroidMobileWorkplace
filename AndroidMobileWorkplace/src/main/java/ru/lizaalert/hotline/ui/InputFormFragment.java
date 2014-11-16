@@ -80,7 +80,7 @@ import java.util.Calendar;
 
 import ru.lizaalert.hotline.ChannelHandler;
 import ru.lizaalert.hotline.R;
-import ru.lizaalert.hotline.Settings;
+import ru.lizaalert.hotline.lib.settings.Settings;
 import ru.lizaalert.hotline.SmsChannel;
 import ru.lizaalert.hotline.VkManager;
 

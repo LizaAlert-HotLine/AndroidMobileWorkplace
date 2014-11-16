@@ -58,13 +58,54 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.yp;
+package ru.lizaalert.hotline.lib.yp;
 
-import io.realm.RealmObject;
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 
-public class YPRegion extends RealmObject {
-    private String region;
+public class YPRegionSpinnerAdapter extends RealmBaseAdapter<YPRegion> implements SpinnerAdapter {
+    int viewId;
+    int elementId;
 
-    public void setRegion(String region) { this.region = region; }
-    public String getRegion() { return region; }
+    private static class MyViewHolder {
+        TextView regionNameView;
+    }
+
+    public YPRegionSpinnerAdapter(Context context,
+                                  RealmResults<YPRegion> realmResults,
+                     boolean automaticUpdate,
+                     int viewId,
+                     int elementId) {
+        super(context, realmResults, automaticUpdate);
+        this.viewId = viewId;
+        this.elementId = elementId;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        MyViewHolder mViewHolder;
+
+        if (convertView == null) {
+            convertView = inflater.inflate(viewId, null);
+
+            mViewHolder = new MyViewHolder();
+            TextView tv = (TextView) convertView.findViewById(elementId);
+            mViewHolder.regionNameView = tv;
+
+            convertView.setTag(mViewHolder);
+        } else {
+            mViewHolder = (MyViewHolder) convertView.getTag();
+        }
+
+        mViewHolder.regionNameView.setText(
+                realmResults.get(position).getRegion()
+        );
+
+        return convertView;
+    }
 }

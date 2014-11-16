@@ -58,20 +58,22 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.yp;
+package ru.lizaalert.hotline.lib.yp;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Xml;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import ru.lizaalert.hotline.SpreadsheetXmlParser;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class YellowPagesLoader {
@@ -226,4 +228,124 @@ public class YellowPagesLoader {
         return null;
     }
 
+    /**
+     * This is an xml parser of spreadsheet data.
+     * It parses 4 string columns of the spreadsheet: region, name, phone and description,
+     * which compose an Entry structure.
+     */
+    public static class SpreadsheetXmlParser {
+        @SuppressWarnings("UnusedDeclaration")
+        private String LOG_TAG = SpreadsheetXmlParser.class.getSimpleName();
+
+        private static SpreadsheetXmlParser instance;
+        private static final String ns = "gsx:";
+
+        public static class Entry {
+            public final String region;
+            public final String name;
+            public final String phone;
+            public final String description;
+
+            public Entry(String region, String name, String phone, String description) {
+                this.name = name;
+                this.phone = phone;
+                this.description = description;
+                this.region = region;
+            }
+        }
+
+        public static synchronized SpreadsheetXmlParser getInstance() {
+            if (instance == null)
+                instance = new SpreadsheetXmlParser();
+            return instance;
+        }
+
+        public List<Entry> parse(String xml) throws XmlPullParserException, IOException {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(new StringReader(xml));
+                parser.nextTag();
+                return readFeed(parser);
+        }
+
+        private List<Entry> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+            List<Entry> entries = new ArrayList<Entry>();
+            parser.require(XmlPullParser.START_TAG, null, "feed");
+
+            while (parser.next() != XmlPullParser.END_TAG) {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    continue;
+                }
+                String name = parser.getName();
+                // Starts by looking for the entry tag
+                if (name.equals("entry")) {
+                    entries.add(readEntry(parser));
+                } else {
+                    skip(parser);
+                }
+            }
+            return entries;
+        }
+
+        private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+            parser.require(XmlPullParser.START_TAG, null, "entry");
+            String region = null;
+            String name = null;
+            String phone = null;
+            String description = null;
+
+            while (parser.next() != XmlPullParser.END_TAG) {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    continue;
+                }
+                String tag = parser.getName();
+                if (tag.equals(ns + "region")) {
+                    region = readString(parser, tag);
+                } else if (tag.equals(ns + "name")) {
+                    name = readString(parser, tag);
+                } else if (tag.equals(ns + "phone")) {
+                    phone = readString(parser, tag);
+                } else if (tag.equals(ns + "description")) {
+                    description = readString(parser, tag);
+                } else {
+                    skip(parser);
+                }
+            }
+            return new Entry(region, name, phone, description);
+        }
+
+        private String readString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+            parser.require(XmlPullParser.START_TAG, null, tag);
+            String string = readText(parser);
+            parser.require(XmlPullParser.END_TAG, null, tag);
+            return string;
+        }
+
+        // For the tags title and summary, extracts their text values.
+        private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+            String result = "";
+            if (parser.next() == XmlPullParser.TEXT) {
+                result = parser.getText();
+                parser.nextTag();
+            }
+            return result;
+        }
+
+        private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                throw new IllegalStateException();
+            }
+            int depth = 1;
+            while (depth != 0) {
+                switch (parser.next()) {
+                    case XmlPullParser.END_TAG:
+                        depth--;
+                        break;
+                    case XmlPullParser.START_TAG:
+                        depth++;
+                        break;
+                }
+            }
+        }
+    }
 }

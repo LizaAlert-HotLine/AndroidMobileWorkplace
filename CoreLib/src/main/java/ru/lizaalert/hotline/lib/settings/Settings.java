@@ -58,47 +58,184 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline;
+package ru.lizaalert.hotline.lib.settings;
 
-public class SettingsConsts {
-    /**
-     * {@value} phone number to send SMS
-     */
-    public final static String PREF_PHONE_DEST = "pref_phone_dest";
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-    /**
-     * {@value} last entered applicant's phone number
-     */
-    public final static String PREF_PHONE_APPL_RECENT = "pref_phone_appl_recent";
+public class Settings {
+    private static final String TAG = "8800";
 
-    /**
-     * {@value} last entered city of loss
-     */
-    public final static String PREF_CITY_RECENT = "pref_city_recent";
+    public static Settings self;
+    private Context context;
+    private SharedPreferences sharedPreferences;
 
-    /**
-     * {@value} last entered name
-     */
-    public final static String PREF_NAME_RECENT = "pref_name_recent";
+    private Settings(Context context) {
+        this.context = context;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
-    /**
-     * {@value} last entered date of birth
-     */
-    public final static String PREF_BIRTHDAY_RECENT = "pref_birthday_recent";
+    public static Settings instance(Context context) {
+        if (self == null) {
+            self = new Settings(context);
+        }
+        return self;
+    }
 
-    /**
-     * {@value} last entered description
-     */
-    public final static String PREF_DESCR_RECENT = "pref_descr_recent";
+    public static Settings instance() {
+        return self;
+    }
 
     /**
-     * {@value} last chosen organization region position in Yellow Pages
+     * Get destination phone number to send SMS
+     * @return String
      */
-    public static final String PREF_YELLOW_PAGES_REGION = "pref_organization_region";
+    public String getPhoneDest() {
+        return sharedPreferences.getString(SettingsConsts.PREF_PHONE_DEST, "");
+    }
 
     /**
-     * {@value} last chosen organization region position in Yellow Pages
+     * Get last entered applicant's phone number
+     * @return String
      */
-    public static final String PREF_YELLOW_PAGES_LIST_POSITION = "pref_yellow_pages_list_position";
+    public String getPhoneApplRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_PHONE_APPL_RECENT, "");
+    }
+
+    /**
+     * Set last entered applicant's phone number
+     * @param phoneNumber String
+     */
+    public void setPhoneApplRecent(String phoneNumber) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_PHONE_APPL_RECENT, phoneNumber);
+        editor.apply();
+    }
+    
+    /**
+     * Get last entered city of loss
+     * @return String
+     */
+    public String getCityRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_CITY_RECENT, "");
+    }
+
+    /**
+     * Set last entered city of loss
+     * @param cityRecent String
+     */
+    public void setCityRecent(String cityRecent) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_CITY_RECENT, cityRecent);
+        editor.apply();
+    }
+
+    /**
+     * Get last entered name
+     * @return String
+     */
+    public String getNameRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_NAME_RECENT, "");
+    }
+
+    /**
+     * Set last entered name
+     * @param nameRecent String
+     */
+    public void setNameRecent(String nameRecent) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_NAME_RECENT, nameRecent);
+        editor.apply();
+    }
+
+    /**
+     * Get last entered date of birth
+     * @return String
+     */
+    public String getBirthdayRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_BIRTHDAY_RECENT, "");
+    }
+
+    /**
+     * Set last entered date of birth
+     * @param birthdayRecent String
+     */
+    public void setBirthdayRecent(String birthdayRecent) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_BIRTHDAY_RECENT, birthdayRecent);
+        editor.apply();
+    }
+    
+    /**
+     * Get last entered description
+     * @return String
+     */
+    public String getDescrRecent() {
+        return sharedPreferences.getString(SettingsConsts.PREF_DESCR_RECENT, "");
+    }
+
+    /**
+     * Set last entered description
+     * @param descrRecent String
+     */
+    public void setDescrRecent(String descrRecent) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_DESCR_RECENT, descrRecent);
+        editor.apply();
+    }
+
+    /**
+     *  Get last position in the list of entries
+     * @return int
+     */
+    public int getYellowPagesLastListPosition() {
+        return sharedPreferences.getInt(SettingsConsts.PREF_YELLOW_PAGES_LIST_POSITION, 0);
+    }
+    
+    /**
+     *  Set last position in the list of entries
+     * @param position int
+     */
+    public void setYellowPagesLastListPosition(int position) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(SettingsConsts.PREF_YELLOW_PAGES_LIST_POSITION, position);
+        editor.apply();
+    }
+
+    /**
+     * Get Yellow Pages region
+     * @return String
+     */
+    public String getYellowPagesRegion() {
+        return sharedPreferences.getString(SettingsConsts.PREF_YELLOW_PAGES_REGION, "Москва");
+    }
+
+    /**
+     * Set last entered description
+     * @param ypRegion String
+     */
+    public void setYellowPagesRegion(String ypRegion) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_YELLOW_PAGES_REGION, ypRegion);
+        editor.apply();
+    }
+
+
+
+    /**
+     * Clear last entered values
+     * Don't forget to use this after you send data
+     */
+    public void clearRecent() {
+        setPhoneApplRecent("");
+        setCityRecent("");
+        setNameRecent("");
+        setBirthdayRecent("");
+        setDescrRecent("");
+    }
+
+
 
 }

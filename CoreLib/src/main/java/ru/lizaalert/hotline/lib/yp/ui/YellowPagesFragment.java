@@ -58,91 +58,159 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.yp;
+package ru.lizaalert.hotline.lib.yp.ui;
 
-import android.content.Context;
-import android.text.TextUtils;
+import android.app.Fragment;
+
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.RealmBaseAdapter;
+import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import ru.lizaalert.hotline.R;
-import ru.lizaalert.hotline.yp.YPEntry;
-import ru.lizaalert.hotline.yp.YPRegion;
 
-import static ru.lizaalert.hotline.SpreadsheetXmlParser.Entry;
+import ru.lizaalert.hotline.lib.R;
+import ru.lizaalert.hotline.lib.settings.Settings;
+import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
+import ru.lizaalert.hotline.lib.yp.YPOrganizationsAdapter;
+import ru.lizaalert.hotline.lib.yp.YPEntry;
+import ru.lizaalert.hotline.lib.yp.YPRegion;
+import ru.lizaalert.hotline.lib.yp.YPRegionSpinnerAdapter;
 
-public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter {
+public class YellowPagesFragment extends Fragment {
+
     private static final String TAG = "8800";
 
-    private ViewHolder viewHolder;
+    private Realm realm;
+    private RealmResults<YPRegion> regions;
+    private RealmResults<YPEntry> entries;
 
-    private int viewId;
-    private int organizationId;
-    private int phonesId;
-    private int descriptionId;
+    private View contentView;
+    private Spinner spinner;
+    private YPRegionSpinnerAdapter spinnerAdapter;
+    private ListView list;
+    private YPOrganizationsAdapter organizationsAdapter;
 
-    public YPOrganizationsAdapter(Context context,
-                                  RealmResults<YPEntry> realmResults,
-                                  boolean automaticUpdate,
-                                  int viewId,
-                                  int organizationId,
-                                  int phonesId,
-                                  int descriptionId) {
-        super(context, realmResults, automaticUpdate);
-        this.viewId = viewId;
-        this.organizationId = organizationId;
-        this.phonesId = phonesId;
-        this.descriptionId = descriptionId;
-
+    public View findViewById(int id) {
+        if (contentView == null) {
+            return null;
+        }
+        return contentView.findViewById(id);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(viewId, parent, false);
-
-            // well set up the ViewHolder
-            viewHolder = new ViewHolder();
-            viewHolder.organizationName = (TextView) convertView.findViewById(organizationId);
-            viewHolder.phones = (TextView) convertView.findViewById(phonesId);
-            viewHolder.description = (TextView) convertView.findViewById(descriptionId);
-
-            // store the holder with the view.
-            convertView.setTag(viewHolder);
-
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        contentView = super.onCreateView(inflater, container, savedInstanceState);
+        if (contentView == null) {
+            contentView = inflater.inflate(R.layout.fragment_yellow_pages, container, false);
         }
-
-        // object item based on the position
-        YPEntry item = getItem(position);
-
-        // assign values if the object is not null
-        if (item != null) {
-            // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
-            viewHolder.organizationName.setText(item.getName());
-            viewHolder.phones.setText(item.getPhone().replace(" ", "\n"));
-            viewHolder.description.setText(item.getDescription());
-
-//            Log.i(LOG_TAG, "display item " + position + " " + item.name);
-        }
-
-        return convertView;
+        return contentView;
     }
 
-    private static class ViewHolder {
-        public TextView organizationName;
-        public TextView phones;
-        public TextView description;
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        realm = Realm.getInstance(getActivity());
+        regions = realm.where(YPRegion.class).findAll();
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        spinnerAdapter = new YPRegionSpinnerAdapter(getActivity(), regions, true, android.R.layout.simple_list_item_1, android.R.id.text1);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                YPRegion region = spinnerAdapter.getItem(position);
+                Log.d(TAG, "Selected region " + region.getRegion());
+
+                Settings.instance(getActivity()).setYellowPagesRegion(region.getRegion());
+                entries = getYPEntries(region.getRegion());
+                organizationsAdapter.updateRealmResults(entries);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        entries = getYPEntries(Settings.instance(getActivity()).getYellowPagesRegion());
+
+        list = (ListView) findViewById(R.id.list);
+        organizationsAdapter = new YPOrganizationsAdapter(getActivity(), entries, true,
+                R.layout.list_item_organization,
+                R.id.organization_name,
+                R.id.phones,
+                R.id.descriprion
+        );
+        list.setAdapter(organizationsAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView description = ((TextView) view.findViewById(R.id.descriprion));
+                if (description.getLineCount() == 4)
+                    description.setMaxLines(Integer.MAX_VALUE);
+                else
+                    description.setMaxLines(4);
+                view.invalidate();
+            }
+        });
+
+        YellowPagesLoader.getInstance(getActivity()).fetchDataAsync();
+    }
+
+    private int findPosition(String what) {
+
+        if (regions.size() == 0) {
+            return -1;
+        }
+
+        for (int i = 0; i < regions.size(); i++) {
+            if (regions.get(i).getRegion().equals(what)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private RealmResults<YPEntry> getYPEntries(String region) {
+        RealmQuery<YPEntry> query = realm.where(YPEntry.class).equalTo("region.region", region);
+        return query.findAll();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Settings.instance(getActivity()).setYellowPagesLastListPosition(list.getFirstVisiblePosition());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+        list.setSelection(Settings.instance(getActivity()).getYellowPagesLastListPosition());
+
+        if (regions.size() > 0) {
+            String region = Settings.instance(getActivity()).getYellowPagesRegion();
+            Log.d(TAG, "try to open region " + region);
+            int position = findPosition(region);
+            if (position < 0) {
+                position = findPosition("Москва");
+            }
+            if (position < 0) {
+                position = 0;
+            }
+            spinner.setSelection(position);
+        }
     }
 }

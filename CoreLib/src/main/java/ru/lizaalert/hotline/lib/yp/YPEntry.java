@@ -58,54 +58,45 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.yp;
+package ru.lizaalert.hotline.lib.yp;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-import io.realm.RealmBaseAdapter;
-import io.realm.RealmResults;
+import io.realm.RealmObject;
 
-public class YPRegionSpinnerAdapter extends RealmBaseAdapter<YPRegion> implements SpinnerAdapter {
-    int viewId;
-    int elementId;
+public class YPEntry extends RealmObject {
+    private YPRegion region;
+    private String name;
+    private String phone;
+    private String description;
 
-    private static class MyViewHolder {
-        TextView regionNameView;
+    public YPRegion getRegion() {
+        return region;
     }
 
-    public YPRegionSpinnerAdapter(Context context,
-                                  RealmResults<YPRegion> realmResults,
-                     boolean automaticUpdate,
-                     int viewId,
-                     int elementId) {
-        super(context, realmResults, automaticUpdate);
-        this.viewId = viewId;
-        this.elementId = elementId;
+    public void setRegion(YPRegion region) {
+        this.region = region;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        MyViewHolder mViewHolder;
+    public String getName() {
+        return name;
+    }
 
-        if (convertView == null) {
-            convertView = inflater.inflate(viewId, null);
+    public void setName(String name) {
+        this.name = name;
+    }
 
-            mViewHolder = new MyViewHolder();
-            TextView tv = (TextView) convertView.findViewById(elementId);
-            mViewHolder.regionNameView = tv;
+    public String getPhone() {
+        return phone;
+    }
 
-            convertView.setTag(mViewHolder);
-        } else {
-            mViewHolder = (MyViewHolder) convertView.getTag();
-        }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-        mViewHolder.regionNameView.setText(
-                realmResults.get(position).getRegion()
-        );
+    public String getDescription() {
+        return description;
+    }
 
-        return convertView;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
