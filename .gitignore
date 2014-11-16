@@ -36,3 +36,5 @@ build
 *.ipr
 *~
 *.swp
+
+realm_version_check.timestamp

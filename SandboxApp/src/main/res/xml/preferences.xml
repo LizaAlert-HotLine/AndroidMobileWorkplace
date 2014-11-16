@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_general">
+        <EditTextPreference
+            android:title="@string/pref_phone"
+            android:key="pref_phone_dest"
+            android:inputType="phone"/>
+
+        <Preference
+            android:title="@string/login_vk"
+            android:key="pref_login_vk"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Настройки</string>
+    <string name="app_name">8-800</string>
+    <string name="clear">Очистить</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="city">Город</string>
+    <string name="name">Имя</string>
+    <string name="date_of_birth">Дата рождения</string>
+    <string name="other">Прочее</string>
+
+    <string name="got_it">Ясно понятно</string>
+
+    <string name="error_no_phone">Не указан номер телефона для отправки. Пожалуйста, укажите номер в настройках</string>
+
+    <string name="pref_general">Общее</string>
+    <string name="pref_phone">Номер телефона</string>
+
+</resources>
