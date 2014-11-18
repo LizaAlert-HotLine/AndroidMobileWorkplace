@@ -63,17 +63,15 @@ package ru.lizaalert.hotline.lib.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class Settings {
+    @SuppressWarnings("UnusedDeclaration")
     private static final String TAG = "8800";
 
     public static Settings self;
-    private Context context;
     private SharedPreferences sharedPreferences;
 
     private Settings(Context context) {
-        this.context = context;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -222,7 +220,23 @@ public class Settings {
         editor.apply();
     }
 
+    /**
+     * Get is first launch
+     * @return boolean
+     */
+    public boolean isFirstLaunch() {
+        return sharedPreferences.getBoolean(SettingsConsts.PREF_FIRST_LAUNCH, true);
+    }
 
+    /**
+     * Set firstLaunch
+     * @param firstLaunch boolean
+     */
+    public void setFirstLaunch(boolean firstLaunch) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SettingsConsts.PREF_FIRST_LAUNCH, firstLaunch);
+        editor.apply();
+    }
 
     /**
      * Clear last entered values

@@ -1,10 +1,3 @@
-/*
-    Copyright (c) 2014 Anton Prozorov <avprozorov@gmail.com>
-    Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
-
-    Этот файл является частью приложения "Мобильное рабочее место оператора
-    Горячей линии по пропавшим детям".
-
     Данная лицензия разрешает лицам, получившим копию "Мобильного рабочего
     места оператора Горячей линии по пропавшим детям" и сопутствующей
     документации (в дальнейшем именуемыми «Программное Обеспечение»),
@@ -29,7 +22,7 @@
 
     Кроме содержимого в этом уведомлении, ни название "Горячей линии по
     пропавшим детям", ни название "Добровольного поискового отряда "Лиза
-    Алерт", ни имена вышеуказанных держателей авторских прав не должно быть
+    Алерт", ни имена держателей авторских прав не должно быть
     использовано в рекламе или иным способом, чтобы увеличивать продажу,
     использование или другие работы в этом Программном обеспечении без
     предшествующего письменного разрешения.
@@ -53,57 +46,7 @@
     DEALINGS IN THE SOFTWARE.
 
     Except as contained in this notice, the name of Liza Alert or the name of
-    Liza Alerts's hotline department or the name(s) the above copyright holders
+    Liza Alerts's hotline department or the name(s) the copyright holders
     shall not be used in advertising or otherwise to promote the sale, use or
     other dealings in this Software without prior written authorization.
- */
 
-package ru.lizaalert.hotline.lib.settings;
-
-public class SettingsConsts {
-    /**
-     * {@value} phone number to send SMS
-     */
-    public final static String PREF_PHONE_DEST = "pref_phone_dest";
-
-    /**
-     * {@value} last entered applicant's phone number
-     */
-    public final static String PREF_PHONE_APPL_RECENT = "pref_phone_appl_recent";
-
-    /**
-     * {@value} last entered city of loss
-     */
-    public final static String PREF_CITY_RECENT = "pref_city_recent";
-
-    /**
-     * {@value} last entered name
-     */
-    public final static String PREF_NAME_RECENT = "pref_name_recent";
-
-    /**
-     * {@value} last entered date of birth
-     */
-    public final static String PREF_BIRTHDAY_RECENT = "pref_birthday_recent";
-
-    /**
-     * {@value} last entered description
-     */
-    public final static String PREF_DESCR_RECENT = "pref_descr_recent";
-
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_REGION = "pref_organization_region";
-
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_LIST_POSITION = "pref_yellow_pages_list_position";
-
-    /**
-     * {@value} first lauch flag
-     */
-    public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
-
-}

@@ -75,6 +75,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import ru.lizaalert.hotline.R;
+import ru.lizaalert.hotline.lib.settings.Settings;
 import ru.lizaalert.hotline.lib.yp.ui.YellowPagesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -118,6 +119,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
+        }
+
+        if (Settings.instance(this).isFirstLaunch()) {
+            LicenceDialog licenceDialog = new LicenceDialog();
+            licenceDialog.show(this);
+            Settings.instance(this).setFirstLaunch(false);
         }
     }
 
