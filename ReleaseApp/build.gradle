@@ -4,8 +4,8 @@ dependencies {
 //    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':CoreLib')
     compile project(':libraries:VKLib')
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile group: 'com.android.support', name: 'support-v13', version: '21.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.2'
+    compile group: 'com.android.support', name: 'support-v13', version: '21.0.2'
     compile 'io.realm:realm-android:0.73.1'
 }
 
@@ -13,9 +13,10 @@ android {
     compileSdkVersion "android-21"
     buildToolsVersion "21.1.1"
 
-		lintOptions {
-			abortOnError false
-		}
+    lintOptions {
+        abortOnError true
+        disable 'InvalidPackage', 'AppCompatMethod', 'UnusedResources'
+    }
 
     defaultConfig {
         applicationId "ru.lizaalert.hotline"

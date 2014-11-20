@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'com.android.library'
 
 repositories {
-        jcenter()
+    jcenter()
 }
 
 dependencies {
@@ -21,9 +21,10 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
 
-      lintOptions {
-          abortOnError false
-      }
+    lintOptions {
+        abortOnError true
+        disable 'InvalidPackage'
+    }
 
     defaultConfig {
         applicationId "ru.lizaalert.hotline.lib"

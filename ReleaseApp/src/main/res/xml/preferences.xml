@@ -3,6 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="@string/pref_general">
+        <!--
         <EditTextPreference
             android:title="@string/pref_phone"
             android:key="pref_phone_dest"
@@ -11,5 +12,6 @@
         <Preference
             android:title="@string/login_vk"
             android:key="pref_login_vk"/>
+            -->
     </PreferenceCategory>
 </PreferenceScreen>

@@ -71,7 +71,6 @@ import android.util.Log;
 import com.vk.sdk.VKSdk;
 
 import ru.lizaalert.hotline.R;
-import ru.lizaalert.hotline.VkManager;
 
 /**
  * Created by prozorov on 05.09.14.
@@ -87,30 +86,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
-        vkLoginPref = findPreference("pref_login_vk");
-        initVkPref();
-    }
-
-    private void initVkPref() {
-        if (VKSdk.isLoggedIn())
-            vkLoginPref.setTitle(R.string.logout_vk);
-        else
-            vkLoginPref.setTitle(R.string.login_vk);
-
-        vkLoginPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (VKSdk.isLoggedIn()){
-                    VKSdk.logout();
-                    Log.d(TAG, "vk logout "+VKSdk.isLoggedIn());
-                }
-                else
-                    VKSdk.authorize(VkManager.VK_PERMISSIONS_SCOPE);
-
-                initVkPref();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -118,9 +93,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onResume();
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
-
-        if (vkLoginPref != null)
-            initVkPref();
     }
 
     @Override
@@ -140,10 +112,5 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             ListPreference listPref = (ListPreference) pref;
             pref.setSummary(listPref.getEntry().toString().replace("%", "%%"));
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        initVkPref();
     }
 }

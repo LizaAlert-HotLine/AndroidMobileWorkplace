@@ -5,7 +5,7 @@
 
     <string name="vk_app_id" translatable="false">4565821</string>
     <string name="action_settings">Settings</string>
-    <string name="app_name">8-800</string>
+    <string name="app_name">8&#8211;800</string>
     <string name="clear">Clear</string>
     <string name="phone_number">Phone number</string>
     <string name="city">City</string>
@@ -20,13 +20,13 @@
     <string name="post_successful">Post successful</string>
     <string name="vk_send_group_request_title">Oops, error occurred</string>
     <string name="vk_send_group_request_message">May be you need to sign up to the group</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="login_vk">Login VK</string>
     <string name="logout_vk">Logout vk</string>
     <string name="login_vk_successful">Login vk successful</string>
-    <string name="title_fragment_yellow_pages">YellowPagesActivity</string>
-    <string name="title_fragment_input">Input Fragment</string>
+    <string name="title_fragment_yellow_pages">Yellow Pages</string>
+    <string name="title_fragment_input">Input</string>
     <string name="no_data">No data</string>
     <string name="no_data_retry_fetch">Could now load yellow pages, try to refresh once you have connection</string>
     <string name="title_activity_main">MainActivity</string>

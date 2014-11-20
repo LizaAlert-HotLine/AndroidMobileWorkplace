@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tabs">
-        <item>@string/title_fragment_input</item>
+        <!-- <item>@string/title_fragment_input</item> -->
         <item>@string/title_fragment_yellow_pages</item>
     </string-array>
 

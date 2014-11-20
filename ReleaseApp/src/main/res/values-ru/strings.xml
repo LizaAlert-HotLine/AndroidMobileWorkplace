@@ -2,7 +2,7 @@
 <resources>
 
     <string name="action_settings">Настройки</string>
-    <string name="app_name">8-800</string>
+    <string name="app_name">8&#8211;800</string>
     <string name="clear">Очистить</string>
     <string name="phone_number">Номер телефона</string>
     <string name="city">Город</string>

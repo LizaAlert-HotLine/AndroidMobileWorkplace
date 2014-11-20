@@ -155,8 +155,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new InputFormFragment();
-                case 1:
+//                    return new InputFormFragment();
+//                case 1:
                     return new YellowPagesFragment();
             }
             return null;
@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.input_form, menu);
+//        getMenuInflater().inflate(R.menu.input_form, menu);
         return true;
     }
 

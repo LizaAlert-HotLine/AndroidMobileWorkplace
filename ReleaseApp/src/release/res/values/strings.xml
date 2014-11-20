@@ -3,5 +3,5 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:ignore="MissingTranslation" >
 
-    <string name="someshit">8-800</string>
+    <string name="someshit">8&#8211;800</string>
 </resources>
