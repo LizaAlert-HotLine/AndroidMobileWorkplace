@@ -21,6 +21,10 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
 
+      lintOptions {
+          abortOnError false
+      }
+
     defaultConfig {
         applicationId "ru.lizaalert.hotline.lib"
         minSdkVersion 14
@@ -36,7 +40,6 @@ android {
     buildTypes {
         release {
             runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
