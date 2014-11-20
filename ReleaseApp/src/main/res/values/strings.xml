@@ -30,5 +30,6 @@
     <string name="no_data">No data</string>
     <string name="no_data_retry_fetch">Could now load yellow pages, try to refresh once you have connection</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="licence">Licence</string>
 
 </resources>

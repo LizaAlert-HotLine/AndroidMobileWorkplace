@@ -13,6 +13,10 @@ android {
     compileSdkVersion "android-21"
     buildToolsVersion "21.1.0"
 
+      lintOptions {
+          abortOnError false
+      }
+
     defaultConfig {
         applicationId "ru.lizaalert.hotline.sandbox"
         testApplicationId "ru.lizaalert.hotline.sandbox.test"
