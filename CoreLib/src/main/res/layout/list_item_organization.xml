@@ -22,8 +22,10 @@
         android:autoLink="all"
         android:paddingTop="@dimen/padding_small"
         android:paddingBottom="@dimen/padding_small"
+        android:lineSpacingExtra="@dimen/padding_small"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:textSize="@dimen/phone_size"
         android:layout_below="@+id/organization_name" />
 
     <TextView
@@ -33,5 +35,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/phones"
         android:maxLines="4"
+        android:autoLink="all"
         android:ellipsize="end" />
 </RelativeLayout>
