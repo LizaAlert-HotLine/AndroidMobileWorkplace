@@ -1,3 +1,5 @@
-include ':SandboxApp', ':CoreLib', ':ReleaseApp'
+include ':SandboxApp'
+include ':CoreLib'
+include ':LAApp'
 include ':libraries:VKLib'
 
