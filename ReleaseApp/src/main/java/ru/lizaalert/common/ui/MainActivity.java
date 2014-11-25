@@ -58,65 +58,147 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.ui;
+package ru.lizaalert.common.ui;
 
-import android.app.AlertDialog;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.yandex.metrica.YandexMetrica;
+import ru.lizaalert.common.R;
+import ru.lizaalert.hotline.lib.settings.Settings;
+import ru.lizaalert.hotline.lib.yp.ui.YellowPagesFragment;
 
-import ru.lizaalert.hotline.R;
+public class MainActivity extends Activity implements ActionBar.TabListener {
 
-public class LicenceDialog {
+    SectionsPagerAdapter mSectionsPagerAdapter;
+    ViewPager mViewPager;
 
-    private static final String LOG_TAG = LicenceDialog.class.getSimpleName();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    public void show(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.licence);
+        // Set up the action bar.
+        final ActionBar actionBar = getActionBar();
+        assert actionBar != null;
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        builder.setMessage(readFileFromAssets(context, "license.txt"));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
+
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+                if (position == 1) {
+                    if (getCurrentFocus() != null) {
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+                }
+
             }
         });
-        builder.create().show();
+
+        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setTabListener(this));
+        }
+
+        if (Settings.instance(this).isFirstLaunch()) {
+            LicenceDialog licenceDialog = new LicenceDialog();
+            licenceDialog.show(this);
+            Settings.instance(this).setFirstLaunch(false);
+        }
     }
 
-    private String readFileFromAssets(Context context, String fileName) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(
-                    new InputStreamReader(context.getAssets().open(fileName), "UTF-8"));
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
 
-            // do reading, usually loop until end of file reading
-            String mLine = reader.readLine();
-            String text = "";
-            while (mLine != null) {
-                text += mLine;
-                mLine = reader.readLine();
-            }
-            Log.i(LOG_TAG, "text " + text);
-            return text;
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "couldn't open license.txt file");
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    //log the exception
-                    Log.w(LOG_TAG, "fail to close input stream");
-                }
-            }
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+
+        private final String[] titles;
+
+        public SectionsPagerAdapter(Context context, FragmentManager fm) {
+            super(fm);
+            titles = context.getResources().getStringArray(R.array.tabs);
         }
-        return null;
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+//                    return new InputFormFragment();
+//                case 1:
+                    return new YellowPagesFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return titles.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.input_form, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        YandexMetrica.onResumeActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        YandexMetrica.onPauseActivity(this);
+        super.onPause();
     }
 }

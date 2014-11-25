@@ -2,9 +2,9 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
-    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:0.13.0'
+//    }
 }
 
 apply plugin: 'com.android.library'
@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.realm:realm-android:0.73.+'
+    compile 'io.realm:realm-android:0.74.0'
 }
 
 android {
@@ -37,11 +37,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
-    }
-    buildTypes {
-        release {
-            runProguard false
-        }
     }
 }
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:ignore="MissingTranslation" >
+xmlns:tools="http://schemas.android.com/tools"
+tools:ignore="MissingTranslation" >
 
-    <string name="someshit">8&#8211;800</string>
+<string name="someshit">8&#8211;800</string>
+<string name="yandex_api_key">30455</string>
 </resources>

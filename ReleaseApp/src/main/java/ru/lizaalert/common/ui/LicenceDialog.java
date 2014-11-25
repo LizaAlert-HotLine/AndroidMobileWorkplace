@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Anton Prozorov <avprozorov@gmail.com>
+    Copyright (c) 2014 Denis Volyntsev <fortun777@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
@@ -58,44 +58,65 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.ui;
+package ru.lizaalert.common.ui;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 
-import com.vk.sdk.VKUIHelper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-public class SettingsActivity extends Activity {
+import ru.lizaalert.common.R;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        VKUIHelper.onCreate(this);
-        if (getFragmentManager().findFragmentByTag(SettingsFragment.class.getSimpleName()) != null) //this is important ot prevent multiple activities to be attached to single activity
-            return;
+public class LicenceDialog {
 
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment(), SettingsFragment.class.getSimpleName())
-                .commit();
+    private static final String LOG_TAG = LicenceDialog.class.getSimpleName();
+
+    public void show(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.licence);
+
+        builder.setMessage(readFileFromAssets(context, "license.txt"));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        VKUIHelper.onResume(this);
+    private String readFileFromAssets(Context context, String fileName) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(context.getAssets().open(fileName), "UTF-8"));
+
+            // do reading, usually loop until end of file reading
+            String mLine = reader.readLine();
+            String text = "";
+            while (mLine != null) {
+                text += mLine;
+                mLine = reader.readLine();
+            }
+            Log.i(LOG_TAG, "text " + text);
+            return text;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "couldn't open license.txt file");
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                    Log.w(LOG_TAG, "fail to close input stream");
+                }
+            }
+        }
+        return null;
     }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        VKUIHelper.onDestroy(this);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        VKUIHelper.onActivityResult(requestCode, resultCode, data);
-    }
-
 }

@@ -126,6 +126,7 @@ public class YellowPagesLoader {
      * @return
      */
     private void fetchData() {
+        Log.d(TAG, "fetchData");
         String xml;
         List<SpreadsheetXmlParser.Entry> entries = null;
 

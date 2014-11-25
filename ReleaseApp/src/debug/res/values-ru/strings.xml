@@ -4,5 +4,4 @@
         tools:ignore="MissingTranslation" >
 
     <string name="app_name">LA Debug</string>
-    <string name="yandex_api_key">30452</string>
 </resources>

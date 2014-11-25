@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.lizaalert.hotline"
+<manifest
+        xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.lizaalert.common"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0"
+    xmlns:tools="http://schemas.android.com/tools"
+        >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="ru.lizaalert.common.MyApp">
         <activity
-            android:name="ru.lizaalert.hotline.ui.MainActivity"
+            android:name="ru.lizaalert.common.ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +30,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ru.lizaalert.hotline.ui.SettingsActivity"
+            android:name="ru.lizaalert.common.ui.SettingsActivity"
             android:label="@string/action_settings"/>
-        <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
+
+        <!-- Yandex Metrica required manifest entries START -->
+        <service
+                android:name="com.yandex.metrica.MetricaService"
+                android:enabled="true"
+                android:exported="true"
+                android:process=":Metrica"
+                tools:ignore="ExportedService">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.yandex.metrica.IMetricaService"/>
+                <data android:scheme="metrica"/>
+            </intent-filter>
+
+            <meta-data android:name="metrica:api:level" android:value="16"/>
+        </service>
+
+        <receiver
+                android:name="com.yandex.metrica.MetricaEventHandler"
+                android:enabled="true"
+                android:exported="true"
+                tools:ignore="ExportedReceiver">
+
+            <intent-filter>
+                <action android:name="com.yandex.metrica.intent.action.SYNC"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <provider
+                android:name="ru.lizaalert.common.MetricaContentProvider"
+                android:authorities="ru.lizaalert.common.MetricaContentProvider"
+                android:enabled="true"
+                android:exported="true"
+                tools:ignore="ExportedContentProvider"/>
 
     </application>
 

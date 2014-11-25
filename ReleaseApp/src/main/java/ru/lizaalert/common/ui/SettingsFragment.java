@@ -58,19 +58,15 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.ui;
+package ru.lizaalert.common.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
-import com.vk.sdk.VKSdk;
-
-import ru.lizaalert.hotline.R;
+import ru.lizaalert.common.R;
 
 /**
  * Created by prozorov on 05.09.14.
@@ -78,7 +74,6 @@ import ru.lizaalert.hotline.R;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
-    private Preference vkLoginPref;
 
 
     @Override
