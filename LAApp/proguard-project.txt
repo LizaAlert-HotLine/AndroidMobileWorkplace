@@ -25,5 +25,6 @@
 
 -keep class com.yandex.metrica.** { *; }
 -dontwarn com.yandex.metrica.**
--keep public class ru.lizaalert.common.MetricaContentProvider
--keep public class ru.lizaalert.common.MyApp
+
+-keepattributes SourceFile,LineNumberTable
+-dontobfuscate
