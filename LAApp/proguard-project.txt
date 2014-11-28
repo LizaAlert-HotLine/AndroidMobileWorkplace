@@ -18,3 +18,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class io.realm.** { *; }
+-dontwarn javax.**
+-dontwarn io.realm.**
+
+-keep class com.yandex.metrica.** { *; }
+-dontwarn com.yandex.metrica.**
+-keep public class ru.lizaalert.common.MetricaContentProvider
+-keep public class ru.lizaalert.common.MyApp
