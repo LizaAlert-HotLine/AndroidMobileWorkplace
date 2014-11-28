@@ -40,6 +40,10 @@ android {
     buildTypes {
         debug {
 //            applicationIdSuffix ".debug"
+
+            minifyEnabled true
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+            proguardFile 'proguard-project.txt'
         }
         release {
             if(System.getenv("KEYSTORE")) {

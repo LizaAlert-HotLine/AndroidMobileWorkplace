@@ -18,3 +18,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class io.realm.** { *; }
+-dontwarn javax.**
+-dontwarn io.realm.**
+
+-keep class com.yandex.metrica.** { *; }
+-dontwarn com.yandex.metrica.**
+
+-keepattributes SourceFile,LineNumberTable
+-dontobfuscate
