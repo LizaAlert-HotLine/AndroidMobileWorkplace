@@ -79,7 +79,7 @@ public class LicenceDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.licence);
 
-        builder.setMessage(readFileFromAssets(context, "license.txt"));
+        builder.setMessage(readFileFromAssets(context, "LICENSE"));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -105,7 +105,7 @@ public class LicenceDialog {
             Log.i(LOG_TAG, "text " + text);
             return text;
         } catch (IOException e) {
-            Log.e(LOG_TAG, "couldn't open license.txt file");
+            Log.e(LOG_TAG, "couldn't open LICENSE file");
             e.printStackTrace();
         } finally {
             if (reader != null) {
