@@ -73,6 +73,18 @@ import ru.lizaalert.common.R;
 
 public class LicenceDialog {
 
+    private Listener listener;
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public interface Listener{
+        void onAcceptLicence(DialogInterface dialog);
+
+        void onDeclineLicence(DialogInterface dialog);
+    }
+
     private static final String LOG_TAG = LicenceDialog.class.getSimpleName();
 
     public void show(Context context) {
@@ -83,9 +95,21 @@ public class LicenceDialog {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                if (listener != null)
+                    listener.onAcceptLicence(dialog);
+
             }
         });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (listener != null)
+                    listener.onDeclineLicence(dialog);
+            }
+        });
+
+        builder.setCancelable(false);
         builder.create().show();
     }
 

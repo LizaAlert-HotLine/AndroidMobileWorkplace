@@ -221,20 +221,20 @@ public class Settings {
     }
 
     /**
-     * Get is first launch
+     * Get is licence accepted
      * @return boolean
      */
-    public boolean isFirstLaunch() {
-        return sharedPreferences.getBoolean(SettingsConsts.PREF_FIRST_LAUNCH, true);
+    public boolean isLicenceAccepted() {
+        return sharedPreferences.getBoolean(SettingsConsts.PREF_LICENCE_ACCEPTED, false);
     }
 
     /**
-     * Set firstLaunch
-     * @param firstLaunch boolean
+     * Set licence accepted
+     * @param licenceAccepted boolean
      */
-    public void setFirstLaunch(boolean firstLaunch) {
+    public void setLicenceAccepted(boolean licenceAccepted) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SettingsConsts.PREF_FIRST_LAUNCH, firstLaunch);
+        editor.putBoolean(SettingsConsts.PREF_LICENCE_ACCEPTED, licenceAccepted);
         editor.apply();
     }
 

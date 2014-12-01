@@ -104,6 +104,6 @@ public class SettingsConsts {
     /**
      * {@value} first lauch flag
      */
-    public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
+    public static final String PREF_LICENCE_ACCEPTED = "pref_first_launch";
 
 }
