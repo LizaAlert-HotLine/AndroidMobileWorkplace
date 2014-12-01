@@ -66,6 +66,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -122,10 +123,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                             .setTabListener(this));
         }
 
-        if (Settings.instance(this).isFirstLaunch()) {
+        if (!Settings.instance(this).isLicenceAccepted()) {
             LicenceDialog licenceDialog = new LicenceDialog();
+            licenceDialog.setListener(new LicenceDialog.Listener() {
+                @Override
+                public void onAcceptLicence(DialogInterface dialog) {
+                    dialog.dismiss();
+                    Settings.instance(MainActivity.this).setLicenceAccepted(true);
+                }
+
+                @Override
+                public void onDeclineLicence(DialogInterface dialog) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
             licenceDialog.show(this);
-            Settings.instance(this).setFirstLaunch(false);
+
         }
     }
 
