@@ -120,6 +120,7 @@ public class YellowPagesFragment extends Fragment {
 
         realm = Realm.getInstance(getActivity());
         regions = realm.where(YPRegion.class).findAll();
+        regions.sort("region");
 
         spinner = (Spinner) findViewById(R.id.spinner);
         spinnerAdapter = new YPRegionSpinnerAdapter(getActivity(), regions, true, android.R.layout.simple_list_item_1, android.R.id.text1);
