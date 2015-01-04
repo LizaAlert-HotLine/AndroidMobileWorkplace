@@ -61,19 +61,26 @@
 package ru.lizaalert.hotline.lib.yp;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.TextAppearanceSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
+import ru.lizaalert.hotline.lib.R;
 
 
 public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter {
     private static final String TAG = "8800";
+    private static final Character TMP_CHAR = '\u00A0';
 
     private ViewHolder viewHolder;
 
@@ -123,7 +130,46 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         if (item != null) {
             // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
             viewHolder.organizationName.setText(item.getName());
-            viewHolder.phones.setText(item.getPhone().replace(" ", "\n"));
+
+            StringBuffer p = new StringBuffer(item.getPhone().replace(";", "\n"));
+
+            // здесь будет происходить следующее:
+            // 1. найдем все телефонные номера с помощью Linkify и превратим в ссылки
+            // 2. в тексте, который стал ссылкой, найдем все isWhitespace-символы и заменим в исходной строке (!) эти символы на TMP_CHAR
+            // 3. из исходной строки удалим все TMP_CHAR (не признает
+            // 4. опять найдем все телефонные номера с помощью Linkify
+            Spannable st = new SpannableString(p);
+            Linkify.addLinks(st, Linkify.PHONE_NUMBERS);
+
+            URLSpan[] spans = st.getSpans(0, st.length() , URLSpan.class);
+            for (URLSpan u : spans) {
+
+                int start = st.getSpanStart(u);
+                int end = st.getSpanEnd(u);
+
+                for (int i = end - 1; i >= start; i--) {
+                    if (Character.isWhitespace(st.subSequence(i, i + 1).charAt(0))) {
+                        p.setCharAt(i, TMP_CHAR);
+                    }
+
+                }
+            }
+
+            st = new SpannableString(p.toString().replace(String.valueOf(TMP_CHAR), ""));
+            Linkify.addLinks(st, Linkify.PHONE_NUMBERS);
+
+            spans = st.getSpans(0, st.length() , URLSpan.class);
+            for (URLSpan u : spans) {
+
+                int start = st.getSpanStart(u);
+                int end = st.getSpanEnd(u);
+
+                st.setSpan(new TextAppearanceSpan(context, R.style.PhoneNumberTextViewStyle), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            viewHolder.phones.setText(st, TextView.BufferType.SPANNABLE);
+            viewHolder.phones.setMovementMethod(LinkMovementMethod.getInstance());
+
             viewHolder.description.setText(item.getDescription());
 
 //            Log.i(LOG_TAG, "display item " + position + " " + item.name);

@@ -9,30 +9,29 @@
     android:paddingBottom="@dimen/activity_vertical_margin">
 
     <TextView
+        style="@style/NameTextViewStyle"
         android:id="@+id/organization_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        />
 
     <TextView
+        style="@style/PhoneTextViewStyle"
         android:id="@+id/phones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:autoLink="all"
         android:paddingTop="@dimen/padding_small"
         android:paddingBottom="@dimen/padding_small"
-        android:lineSpacingExtra="@dimen/padding_small"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textSize="@dimen/phone_size"
         android:layout_below="@+id/organization_name" />
 
     <TextView
+        style="@style/DescriptionTextViewStyle"
         android:id="@+id/descriprion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/phones"
         android:maxLines="4"
         android:autoLink="all"

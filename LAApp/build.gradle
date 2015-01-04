@@ -5,7 +5,6 @@ dependencies {
     compile project(':CoreLib')
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile group: 'com.android.support', name: 'support-v13', version: '21.0.2'
-    compile 'io.realm:realm-android:0.74.0'
     compile 'com.yandex.android:mobmetricalib:1.60'
     compile 'com.google.protobuf:protobuf-java:2.5.0'
 }
