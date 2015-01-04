@@ -206,7 +206,7 @@ public class YellowPagesFragment extends Fragment {
             Log.d(TAG, "try to open region " + region);
             int position = findPosition(region);
             if (position < 0) {
-                position = findPosition("Москва");
+                position = findPosition("Все регионы");
             }
             if (position < 0) {
                 position = 0;
