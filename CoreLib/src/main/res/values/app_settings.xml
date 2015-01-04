@@ -1,0 +1,8 @@
+<resources>
+    <!--
+     ссылка на таблицу для экспериментов:
+        https://docs.google.com/spreadsheets/d/1A85vzE3eV7optQ4sPADuhJjuNhYdPwb_jGeCAd_7Bxw/edit#gid=0
+     если нужен доступ - запрашивайте
+    -->
+    <string name="yellow_pages_key" translatable="false">1A85vzE3eV7optQ4sPADuhJjuNhYdPwb_jGeCAd_7Bxw</string>
+</resources>

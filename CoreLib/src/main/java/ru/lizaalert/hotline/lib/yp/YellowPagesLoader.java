@@ -67,6 +67,8 @@ import android.util.Xml;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import ru.lizaalert.hotline.lib.R;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -79,9 +81,7 @@ import java.util.List;
 public class YellowPagesLoader {
     private static YellowPagesLoader instance;
     private static Context context;
-
-    private final String YELLOW_PAGES_KEY = "18WABg03Ja4dJHJxVMqWBeEfFYs23D3ArCEuYgQGpk7s";
-    private final String YELLOW_PAGES_URL = "http://spreadsheets.google.com/feeds/list/" + YELLOW_PAGES_KEY + "/od6/public/values";
+    private static String yellow_pages_url;
 
     private static final String TAG = "8800";
 
@@ -93,6 +93,13 @@ public class YellowPagesLoader {
     public static synchronized YellowPagesLoader getInstance(Context c) {
         if (instance == null) {
             context = c;
+
+            String key = context.getString(R.string.yellow_pages_key);
+            assert key != null;
+            assert key.length() > 0;
+
+            yellow_pages_url = "http://spreadsheets.google.com/feeds/list/" + key + "/od6/public/values";
+
             instance = new YellowPagesLoader();
         }
         return instance;
@@ -131,7 +138,7 @@ public class YellowPagesLoader {
         List<SpreadsheetXmlParser.Entry> entries = null;
 
         try {
-            URL url = new URL(YELLOW_PAGES_URL);
+            URL url = new URL(yellow_pages_url);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 

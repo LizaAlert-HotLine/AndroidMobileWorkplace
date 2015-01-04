@@ -71,10 +71,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+}
 
-    // TODO жутко криво. не получается сделать один таск, который бы зависел от variant
-    preBuild.dependsOn copyFilesDebug
-    copyFilesDebug.dependsOn copyFilesRelease
+tasks.whenTaskAdded { task ->
+//	print 'added '
+//	println task.name
+	if (task.name == 'generateDebugResources') {
+		task.dependsOn copyFilesDebug
+	}
+	if (task.name == 'generateReleaseResources') {
+		task.dependsOn copyFilesRelease
+	}
 }
 
 
