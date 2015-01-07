@@ -127,7 +127,7 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         YPEntry item = getItem(position);
 
         // assign values if the object is not null
-        if (item != null) {
+        if (item != null && item.getName() != null) {
             // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
             viewHolder.organizationName.setText(item.getName());
 
@@ -163,8 +163,9 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
 
                 int start = st.getSpanStart(u);
                 int end = st.getSpanEnd(u);
-
-                st.setSpan(new TextAppearanceSpan(context, R.style.PhoneNumberTextViewStyle), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (end > start) {
+                    st.setSpan(new TextAppearanceSpan(context, R.style.PhoneNumberTextViewStyle), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
 
             viewHolder.phones.setText(st, TextView.BufferType.SPANNABLE);

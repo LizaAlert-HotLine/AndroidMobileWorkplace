@@ -226,7 +226,7 @@ public class YellowPagesLoader {
             entry.setPhone(e.phone);
             entry.setEmail(e.email);
             entry.setDescription(e.description);
-            entry.setSearchString(sb.toString());
+            entry.setSearchstring(sb.toString());
             Log.d(TAG, "searchstring " + sb.toString());
 
         }
@@ -254,7 +254,7 @@ public class YellowPagesLoader {
             return "";
         }
 
-        return what.replaceAll("[0-9]+", "");
+        return what.replaceAll("[^0-9]+", "");
     }
 
     private String inputStreamToString(InputStream inputStream) throws IOException {

@@ -128,11 +128,11 @@ public class YPEntry extends RealmObject {
         this.shortname = shortname;
     }
 
-    public String getSearchString() {
+    public String getSearchstring() {
         return searchstring;
     }
 
-    public void setSearchString(String searchstring) {
+    public void setSearchstring(String searchstring) {
         this.searchstring = searchstring;
     }
 }

@@ -68,9 +68,6 @@ import android.preference.PreferenceFragment;
 
 import ru.lizaalert.common.R;
 
-/**
- * Created by prozorov on 05.09.14.
- */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
