@@ -70,6 +70,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -82,6 +83,7 @@ import android.widget.SearchView;
 import com.yandex.metrica.YandexMetrica;
 import ru.lizaalert.common.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
+import ru.lizaalert.hotline.lib.yp.MySuggestionProvider;
 import ru.lizaalert.hotline.lib.yp.ui.YellowPagesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -225,4 +227,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         super.onPause();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_clear_history:
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                        MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
+                suggestions.clearHistory();
+                return true;
+            case R.id.action_search:
+                onSearchRequested();
+                return true;
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
 }

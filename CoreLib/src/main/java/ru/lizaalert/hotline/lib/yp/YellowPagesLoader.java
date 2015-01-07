@@ -227,7 +227,7 @@ public class YellowPagesLoader {
             entry.setEmail(e.email);
             entry.setDescription(e.description);
             entry.setSearchstring(sb.toString());
-            Log.d(TAG, "searchstring " + sb.toString());
+//            Log.d(TAG, "searchstring " + sb.toString());
 
         }
 

@@ -58,106 +58,15 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.lib.yp.ui;
+package ru.lizaalert.hotline.lib.yp;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
-import android.util.Log;
-import android.view.MenuItem;
-import android.widget.ListView;
+import android.content.SearchRecentSuggestionsProvider;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import ru.lizaalert.hotline.lib.R;
-import ru.lizaalert.hotline.lib.settings.Settings;
-import ru.lizaalert.hotline.lib.yp.MySuggestionProvider;
-import ru.lizaalert.hotline.lib.yp.YPEntry;
-import ru.lizaalert.hotline.lib.yp.YPOrganizationsAdapter;
-import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
+public class MySuggestionProvider extends SearchRecentSuggestionsProvider {
+    public final static String AUTHORITY = "ru.lizaalert.hotline.lib.yp.MySuggestionProvider";
+    public final static int MODE = DATABASE_MODE_QUERIES;
 
-public class SearchActivity extends Activity {
-    public static final String TAG = "8800";
-
-    private ListView listView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        listView = (ListView)findViewById(R.id.list);
-
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-            doMySearch(query);
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
-        }
-    }
-
-    private void doMySearch(String query) {
-        Log.d(TAG, "query " + query);
-        setTitle(query);
-
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-
-        String[] splited = query.split("\\s+");
-
-        String region = Settings.instance(this).getYellowPagesRegion();
-
-        Realm realm = Realm.getInstance(this);
-
-        RealmQuery<YPEntry> dbquery = realm.where(YPEntry.class).equalTo("region.region", region);
-        for (String q : splited) {
-            if (q.length() > 0) {
-                dbquery.contains("searchstring", YellowPagesLoader.string4search(q), false);
-            }
-        }
-
-        RealmResults<YPEntry> entries = dbquery.findAll();
-
-        listView = (ListView) findViewById(ru.lizaalert.hotline.lib.R.id.list);
-        YPOrganizationsAdapter organizationsAdapter = new YPOrganizationsAdapter(this, entries, true,
-                R.layout.list_item_organization,
-                R.id.organization_name,
-                R.id.phones,
-                R.id.descriprion
-        );
-
-        listView.setAdapter(organizationsAdapter);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return (super.onOptionsItemSelected(menuItem));
+    public MySuggestionProvider() {
+        setupSuggestions(AUTHORITY, MODE);
     }
 }

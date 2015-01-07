@@ -18,6 +18,7 @@
     <string name="pref_phone">Номер телефона</string>
 
     <string name="title_fragment_yellow_pages">Телефонный справочник</string>
+    <string name="clear_search_history">Очистить историю поиска</string>
 
 
 </resources>

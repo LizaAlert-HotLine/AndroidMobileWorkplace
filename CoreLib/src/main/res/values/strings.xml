@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">My Module</string>
-    <string name="lib_search_menu_item">Search</string>
+    <string name="app_label">LA</string>
+    <string name="search_hint">Search organization</string>
+
 </resources>

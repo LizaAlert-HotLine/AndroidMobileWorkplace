@@ -43,6 +43,8 @@
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <provider android:name="ru.lizaalert.hotline.lib.yp.MySuggestionProvider"
+            android:authorities="ru.lizaalert.hotline.lib.yp.MySuggestionProvider" />
 
 
         <!-- Yandex Metrica required manifest entries START -->

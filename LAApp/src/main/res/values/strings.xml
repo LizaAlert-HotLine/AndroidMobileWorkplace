@@ -33,7 +33,6 @@
     <string name="licence">Licence</string>
 
     <string name="search_menu_item">Search</string>
-    <string name="app_label">Fucking label</string>
-    <string name="search_hint">Search organization</string>
+    <string name="clear_search_history">Clear the search history</string>
 
 </resources>
