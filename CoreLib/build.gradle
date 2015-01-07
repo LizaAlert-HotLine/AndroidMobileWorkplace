@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     compile 'io.realm:realm-android:0.76.0'
+    compile 'com.android.support:appcompat-v7:21.0.2'
 }
 
 android {

@@ -177,7 +177,7 @@ public class YellowPagesLoader {
         if (entries == null || entries.size() < 1)
             return;
 
-        realm = Realm.getInstance(context, false);
+        realm = Realm.getInstance(context);
         RealmResults<YPRegion> allRegions = realm.where(YPRegion.class).findAll();
         RealmResults<YPEntry> allEntries = realm.where(YPEntry.class).findAll();
         realm.beginTransaction();
@@ -196,17 +196,65 @@ public class YellowPagesLoader {
                 region.setRegion(e.region);
             }
 
+            StringBuilder sb = new StringBuilder();
+
+            String name = e.name;
+            if (name == null || name.length() <= 0) {
+                name = "?";
+            }
+            sb.append(string4search(name));
+
+            String shortname = e.shortname;
+            if (shortname == null) {
+                shortname = e.name;
+            }
+            sb.append(string4search(shortname));
+
+            String section = e.section;
+            if (section == null) {
+                section = shortname.substring(0, 1).toUpperCase();
+            }
+
+            sb.append(phone4search(e.phone));
+            sb.append(string4search(e.description));
+
             YPEntry entry = realm.createObject(YPEntry.class);
             entry.setRegion(region);
-            entry.setName(e.name);
+            entry.setSection(section);
+            entry.setShortname(shortname);
+            entry.setName(name);
             entry.setPhone(e.phone);
+            entry.setEmail(e.email);
             entry.setDescription(e.description);
+            entry.setSearchString(sb.toString());
+            Log.d(TAG, "searchstring " + sb.toString());
+
         }
 
         realm.commitTransaction();
         realm.refresh();
 
         success = true;
+    }
+
+    public static String string4search (String what) {
+        if (what == null) {
+            return "";
+        }
+
+        return what
+                .toLowerCase()
+                .replaceAll("[^a-zабвгдеёжзиклмнопрстуфхцчшщъыьэюя0-9]+", "")
+                .replaceAll("ё", "е")
+                .replaceAll("ъ", "ь");
+    }
+
+    public static String phone4search (String what) {
+        if (what == null) {
+            return "";
+        }
+
+        return what.replaceAll("[0-9]+", "");
     }
 
     private String inputStreamToString(InputStream inputStream) throws IOException {
@@ -253,12 +301,24 @@ public class YellowPagesLoader {
             public final String name;
             public final String phone;
             public final String description;
+            public final String email;
+            public final String shortname;
+            public final String section;
 
-            public Entry(String region, String name, String phone, String description) {
+            public Entry(String region,
+                         String section,
+                         String shortname,
+                         String name,
+                         String phone,
+                         String email,
+                         String description) {
+                this.region = region;
+                this.section = section;
+                this.shortname = shortname;
                 this.name = name;
                 this.phone = phone;
+                this.email = email;
                 this.description = description;
-                this.region = region;
             }
         }
 
@@ -298,8 +358,11 @@ public class YellowPagesLoader {
         private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
             parser.require(XmlPullParser.START_TAG, null, "entry");
             String region = null;
+            String section = null;
+            String shortname = null;
             String name = null;
             String phone = null;
+            String email = null;
             String description = null;
 
             while (parser.next() != XmlPullParser.END_TAG) {
@@ -309,17 +372,23 @@ public class YellowPagesLoader {
                 String tag = parser.getName();
                 if (tag.equals(ns + "region")) {
                     region = readString(parser, tag);
+                } else if (tag.equals(ns + "section")) {
+                    section = readString(parser, tag);
+                } else if (tag.equals(ns + "shortname")) {
+                    shortname = readString(parser, tag);
                 } else if (tag.equals(ns + "name")) {
                     name = readString(parser, tag);
                 } else if (tag.equals(ns + "phone")) {
                     phone = readString(parser, tag);
+                } else if (tag.equals(ns + "email")) {
+                    email = readString(parser, tag);
                 } else if (tag.equals(ns + "description")) {
                     description = readString(parser, tag);
                 } else {
                     skip(parser);
                 }
             }
-            return new Entry(region, name, phone, description);
+            return new Entry(region, section, shortname, name, phone, email, description);
         }
 
         private String readString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {

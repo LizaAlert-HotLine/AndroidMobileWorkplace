@@ -207,7 +207,7 @@ public class Settings {
      * @return String
      */
     public String getYellowPagesRegion() {
-        return sharedPreferences.getString(SettingsConsts.PREF_YELLOW_PAGES_REGION, "Москва");
+        return sharedPreferences.getString(SettingsConsts.PREF_YELLOW_PAGES_REGION, "Все регионы");
     }
 
     /**

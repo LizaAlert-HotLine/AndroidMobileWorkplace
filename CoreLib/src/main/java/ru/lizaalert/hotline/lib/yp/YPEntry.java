@@ -67,6 +67,10 @@ public class YPEntry extends RealmObject {
     private String name;
     private String phone;
     private String description;
+    private String email;
+    private String section;
+    private String shortname;
+    private String searchstring;
 
     public YPRegion getRegion() {
         return region;
@@ -98,5 +102,37 @@ public class YPEntry extends RealmObject {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getShortname() {
+        return shortname;
+    }
+
+    public void setShortname(String shortname) {
+        this.shortname = shortname;
+    }
+
+    public String getSearchString() {
+        return searchstring;
+    }
+
+    public void setSearchString(String searchstring) {
+        this.searchstring = searchstring;
     }
 }

@@ -98,6 +98,11 @@ public class YellowPagesFragment extends Fragment {
     private ListView list;
     private YPOrganizationsAdapter organizationsAdapter;
 
+    private String query;
+    public void setQuery (String region, String query) {
+        this.query = query;
+    }
+
     public View findViewById(int id) {
         if (contentView == null) {
             return null;

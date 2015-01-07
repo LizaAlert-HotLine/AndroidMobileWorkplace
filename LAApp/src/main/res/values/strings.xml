@@ -32,4 +32,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="licence">Licence</string>
 
+    <string name="search_menu_item">Search</string>
+    <string name="app_label">Fucking label</string>
+    <string name="search_hint">Search organization</string>
+
 </resources>

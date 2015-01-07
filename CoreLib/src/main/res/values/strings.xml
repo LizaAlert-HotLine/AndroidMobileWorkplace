@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Module</string>
+    <string name="lib_search_menu_item">Search</string>
 </resources>
