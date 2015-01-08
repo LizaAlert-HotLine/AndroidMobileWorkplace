@@ -152,6 +152,7 @@ public class YellowPagesFragment extends Fragment {
         list = (ListView) findViewById(R.id.list);
         organizationsAdapter = new YPOrganizationsAdapter(getActivity(), entries, true,
                 R.layout.list_item_organization,
+                R.id.section,
                 R.id.organization_name,
                 R.id.phones,
                 R.id.descriprion
@@ -161,10 +162,11 @@ public class YellowPagesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView description = ((TextView) view.findViewById(R.id.descriprion));
-                if (description.getLineCount() == 4)
+                if (description.getLineCount() == 4) {
                     description.setMaxLines(Integer.MAX_VALUE);
-                else
+                } else {
                     description.setMaxLines(4);
+                }
                 view.invalidate();
             }
         });
@@ -189,7 +191,9 @@ public class YellowPagesFragment extends Fragment {
 
     private RealmResults<YPEntry> getYPEntries(String region) {
         RealmQuery<YPEntry> query = realm.where(YPEntry.class).equalTo("region.region", region);
-        return query.findAll();
+        RealmResults<YPEntry> result = query.findAll();
+        result.sort("sortstring");
+        return result;
     }
 
     @Override

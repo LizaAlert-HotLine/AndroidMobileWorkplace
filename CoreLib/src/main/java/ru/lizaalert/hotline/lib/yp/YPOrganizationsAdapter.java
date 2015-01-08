@@ -85,23 +85,27 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
     private ViewHolder viewHolder;
 
     private int viewId;
+    private int sectionId;
     private int organizationId;
     private int phonesId;
     private int descriptionId;
+    private RealmResults<YPEntry> realmResults;
 
     public YPOrganizationsAdapter(Context context,
                                   RealmResults<YPEntry> realmResults,
                                   boolean automaticUpdate,
                                   int viewId,
+                                  int sectionId,
                                   int organizationId,
                                   int phonesId,
                                   int descriptionId) {
         super(context, realmResults, automaticUpdate);
         this.viewId = viewId;
+        this.sectionId = sectionId;
         this.organizationId = organizationId;
         this.phonesId = phonesId;
         this.descriptionId = descriptionId;
-
+        this.realmResults = realmResults;
     }
 
     @Override
@@ -112,6 +116,7 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
 
             // well set up the ViewHolder
             viewHolder = new ViewHolder();
+            viewHolder.section = (TextView) convertView.findViewById(sectionId);
             viewHolder.organizationName = (TextView) convertView.findViewById(organizationId);
             viewHolder.phones = (TextView) convertView.findViewById(phonesId);
             viewHolder.description = (TextView) convertView.findViewById(descriptionId);
@@ -128,6 +133,23 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
 
         // assign values if the object is not null
         if (item != null && item.getName() != null) {
+            boolean separator = false;
+            if (position == 0) {
+                separator = true;
+            } else {
+                YPEntry prev = getItem(position - 1);
+                if (prev != null && !prev.getSection().equals(item.getSection())) {
+                    separator = true;
+                }
+            }
+
+            if (separator) {
+                viewHolder.section.setText(item.getSection());
+                viewHolder.section.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.section.setVisibility(View.GONE);
+            }
+
             // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
             viewHolder.organizationName.setText(item.getName());
 
@@ -180,6 +202,7 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
     }
 
     private static class ViewHolder {
+        public TextView section;
         public TextView organizationName;
         public TextView phones;
         public TextView description;

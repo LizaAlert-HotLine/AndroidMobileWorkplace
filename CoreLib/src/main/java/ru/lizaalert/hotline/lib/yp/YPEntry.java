@@ -61,6 +61,7 @@
 package ru.lizaalert.hotline.lib.yp;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
 
 public class YPEntry extends RealmObject {
     private YPRegion region;
@@ -70,7 +71,10 @@ public class YPEntry extends RealmObject {
     private String email;
     private String section;
     private String shortname;
+    @Index
     private String searchstring;
+    @Index
+    private String sortstring; // https://github.com/realm/realm-java/issues/648
 
     public YPRegion getRegion() {
         return region;
@@ -134,5 +138,13 @@ public class YPEntry extends RealmObject {
 
     public void setSearchstring(String searchstring) {
         this.searchstring = searchstring;
+    }
+
+    public String getSortstring() {
+        return sortstring;
+    }
+
+    public void setSortstring(String sortstring) {
+        this.sortstring = sortstring;
     }
 }

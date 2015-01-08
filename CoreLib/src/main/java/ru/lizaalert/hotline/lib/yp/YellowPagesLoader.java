@@ -177,64 +177,73 @@ public class YellowPagesLoader {
         if (entries == null || entries.size() < 1)
             return;
 
-        realm = Realm.getInstance(context);
-        RealmResults<YPRegion> allRegions = realm.where(YPRegion.class).findAll();
-        RealmResults<YPEntry> allEntries = realm.where(YPEntry.class).findAll();
-        realm.beginTransaction();
+        try {
 
-        allRegions.clear();
-        allEntries.clear();
+            realm = Realm.getInstance(context);
+            RealmResults<YPRegion> allRegions = realm.where(YPRegion.class).findAll();
+            RealmResults<YPEntry> allEntries = realm.where(YPEntry.class).findAll();
+            realm.beginTransaction();
 
-        for (SpreadsheetXmlParser.Entry e : entries) {
-            YPRegion region;
+            allRegions.clear();
+            allEntries.clear();
 
-            RealmQuery<YPRegion> query = realm.where(YPRegion.class).equalTo("region", e.region);
-            if (query.count() > 0) {
-                region = query.findFirst();
-            } else {
-                region = realm.createObject(YPRegion.class);
-                region.setRegion(e.region);
-            }
+            for (SpreadsheetXmlParser.Entry e : entries) {
+                YPRegion region;
 
-            StringBuilder sb = new StringBuilder();
+                RealmQuery<YPRegion> query = realm.where(YPRegion.class).equalTo("region", e.region);
+                if (query.count() > 0) {
+                    region = query.findFirst();
+                } else {
+                    region = realm.createObject(YPRegion.class);
+                    region.setRegion(e.region);
+                }
 
-            String name = e.name;
-            if (name == null || name.length() <= 0) {
-                name = "?";
-            }
-            sb.append(string4search(name));
+                StringBuilder sb = new StringBuilder();
 
-            String shortname = e.shortname;
-            if (shortname == null) {
-                shortname = e.name;
-            }
-            sb.append(string4search(shortname));
+                String name = e.name;
+                if (name == null || name.length() <= 0) {
+                    name = "?";
+                }
+                sb.append(string4search(name));
 
-            String section = e.section;
-            if (section == null) {
-                section = shortname.substring(0, 1).toUpperCase();
-            }
+                String shortname = e.shortname;
+                if (shortname == null || shortname.length() <= 0) {
+                    shortname = e.name;
+                }
+                sb.append(string4search(shortname));
 
-            sb.append(phone4search(e.phone));
-            sb.append(string4search(e.description));
+                String section = e.section;
+                if (section == null || section.length() <= 0) {
+                    section = string4search(shortname).substring(0, 1).toUpperCase();
+                }
 
-            YPEntry entry = realm.createObject(YPEntry.class);
-            entry.setRegion(region);
-            entry.setSection(section);
-            entry.setShortname(shortname);
-            entry.setName(name);
-            entry.setPhone(e.phone);
-            entry.setEmail(e.email);
-            entry.setDescription(e.description);
-            entry.setSearchstring(sb.toString());
+                sb.append(phone4search(e.phone));
+                sb.append(string4search(e.description));
+
+                YPEntry entry = realm.createObject(YPEntry.class);
+                entry.setRegion(region);
+                entry.setSection(section);
+                entry.setShortname(shortname);
+                entry.setName(name);
+                entry.setPhone(e.phone);
+                entry.setEmail(e.email);
+                entry.setDescription(e.description);
+                entry.setSearchstring(sb.toString());
+                entry.setSortstring((section+shortname).toLowerCase());
 //            Log.d(TAG, "searchstring " + sb.toString());
 
+            }
+
+            realm.commitTransaction();
+            realm.refresh();
+
+            success = true;
+        } finally {
+            if (realm != null) {
+                realm.close();
+                realm = null;
+            }
         }
-
-        realm.commitTransaction();
-        realm.refresh();
-
-        success = true;
     }
 
     public static String string4search (String what) {
@@ -312,13 +321,13 @@ public class YellowPagesLoader {
                          String phone,
                          String email,
                          String description) {
-                this.region = region;
-                this.section = section;
-                this.shortname = shortname;
-                this.name = name;
-                this.phone = phone;
-                this.email = email;
-                this.description = description;
+                this.region = (region == null ? null : region.trim());
+                this.section = (section == null ? null : section.trim());
+                this.shortname = (shortname == null ? null : shortname.trim());
+                this.name = (name == null ? null : name.trim());
+                this.phone = (phone == null ? null : phone.trim());
+                this.email = (email == null ? null : email.trim());
+                this.description = (description == null ? null : description.trim());
             }
         }
 

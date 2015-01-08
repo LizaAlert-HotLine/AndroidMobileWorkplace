@@ -67,7 +67,10 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -138,16 +141,30 @@ public class SearchActivity extends Activity {
         }
 
         RealmResults<YPEntry> entries = dbquery.findAll();
+        entries.sort("sortstring");
 
         listView = (ListView) findViewById(ru.lizaalert.hotline.lib.R.id.list);
         YPOrganizationsAdapter organizationsAdapter = new YPOrganizationsAdapter(this, entries, true,
                 R.layout.list_item_organization,
+                R.id.section,
                 R.id.organization_name,
                 R.id.phones,
                 R.id.descriprion
         );
 
         listView.setAdapter(organizationsAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView description = ((TextView) view.findViewById(R.id.descriprion));
+                if (description.getLineCount() == 4) {
+                    description.setMaxLines(Integer.MAX_VALUE);
+                } else {
+                    description.setMaxLines(4);
+                }
+                view.invalidate();
+            }
+        });
 
     }
 
