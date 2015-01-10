@@ -181,7 +181,13 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
             // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
             viewHolder.organizationName.setText(item.getName());
 
-            StringBuffer p = new StringBuffer(item.getPhone().replace(";", "\n"));
+            StringBuffer p = new StringBuffer(
+                    item.getPhone()
+                            .replace(";", "\n")
+                            .replace("'+", "+"));
+            if (p.length() > 0 && p.charAt(0) == '\'') {
+                p.deleteCharAt(0);
+            }
 
             // здесь будет происходить следующее:
             // 1. найдем все телефонные номера с помощью Linkify и превратим в ссылки
