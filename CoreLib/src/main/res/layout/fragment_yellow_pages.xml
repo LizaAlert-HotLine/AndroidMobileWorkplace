@@ -14,11 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ListView
+    <ru.lizaalert.hotline.lib.yp.ui.YpFastscrollListView
         android:id="@+id/list"
         android:layout_marginTop="@dimen/padding_small"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadeScrollbars="false" />
+        android:fastScrollEnabled="true"
+        android:fastScrollAlwaysVisible="true"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        style="@style/FastScrollTheme"
+        />
 
 </LinearLayout>

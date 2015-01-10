@@ -1,4 +1,13 @@
 <resources>
+    <style name="FastScrollTheme">
+        <!-- <item name="android:textColorPrimary">#ffda1f1d</item> -->
+        <item name="android:fastScrollThumbDrawable">@drawable/my_selector</item>
+        <!-- <item name="android:fastScrollTrackDrawable">@drawable/fast_scrollbar_track</item> -->
+        <item name="android:fastScrollTextColor">#ff23da2f</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/empty</item>
+        <item name="android:fastScrollPreviewBackgroundLeft">@drawable/empty</item>
+    </style>
+
     <style name="SectionTextViewStyle" parent="android:Widget.TextView">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textAllCaps">true</item>

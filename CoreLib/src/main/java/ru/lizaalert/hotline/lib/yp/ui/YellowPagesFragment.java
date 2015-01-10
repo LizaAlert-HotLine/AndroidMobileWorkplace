@@ -73,6 +73,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -90,18 +91,12 @@ public class YellowPagesFragment extends Fragment {
 
     private Realm realm;
     private RealmResults<YPRegion> regions;
-    private RealmResults<YPEntry> entries;
 
     private View contentView;
     private Spinner spinner;
     private YPRegionSpinnerAdapter spinnerAdapter;
     private ListView list;
     private YPOrganizationsAdapter organizationsAdapter;
-
-    private String query;
-    public void setQuery (String region, String query) {
-        this.query = query;
-    }
 
     public View findViewById(int id) {
         if (contentView == null) {
@@ -122,6 +117,8 @@ public class YellowPagesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "YellowPagesFragment - onActivityCreated");
+
 
         realm = Realm.getInstance(getActivity());
         regions = realm.where(YPRegion.class).findAll();
@@ -137,8 +134,7 @@ public class YellowPagesFragment extends Fragment {
                 Log.d(TAG, "Selected region " + region.getRegion());
 
                 Settings.instance(getActivity()).setYellowPagesRegion(region.getRegion());
-                entries = getYPEntries(region.getRegion());
-                organizationsAdapter.updateRealmResults(entries);
+                setEntriesAdapter(getYPEntries(region.getRegion()));
             }
 
             @Override
@@ -147,17 +143,7 @@ public class YellowPagesFragment extends Fragment {
             }
         });
 
-        entries = getYPEntries(Settings.instance(getActivity()).getYellowPagesRegion());
-
         list = (ListView) findViewById(R.id.list);
-        organizationsAdapter = new YPOrganizationsAdapter(getActivity(), entries, true,
-                R.layout.list_item_organization,
-                R.id.section,
-                R.id.organization_name,
-                R.id.phones,
-                R.id.descriprion
-        );
-        list.setAdapter(organizationsAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -171,7 +157,22 @@ public class YellowPagesFragment extends Fragment {
             }
         });
 
+        setEntriesAdapter(getYPEntries(Settings.instance(getActivity()).getYellowPagesRegion()));
+
         YellowPagesLoader.getInstance(getActivity()).fetchDataAsync();
+    }
+
+    private void setEntriesAdapter (RealmResults<YPEntry> entries) {
+        organizationsAdapter = new YPOrganizationsAdapter(getActivity(), entries, true,
+                R.layout.list_item_organization,
+                R.id.section,
+                R.id.organization_name,
+                R.id.phones,
+                R.id.descriprion
+        );
+        list.setAdapter(organizationsAdapter);
+
+        organizationsAdapter.notifyDataSetChanged();
     }
 
     private int findPosition(String what) {
@@ -206,7 +207,6 @@ public class YellowPagesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
 
         list.setSelection(Settings.instance(getActivity()).getYellowPagesLastListPosition());
 
@@ -221,6 +221,30 @@ public class YellowPagesFragment extends Fragment {
                 position = 0;
             }
             spinner.setSelection(position);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (realm != null) {
+            realm.addChangeListener(new RealmChangeListener() {
+                @Override
+                public void onChange() {
+                    Log.d(TAG, "realm dataset changed");
+                    setEntriesAdapter(getYPEntries(Settings.instance(getActivity()).getYellowPagesRegion()));
+                    organizationsAdapter.notifyDataSetChanged();
+                    spinnerAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (realm != null) {
+            realm.removeAllChangeListeners();
         }
     }
 }

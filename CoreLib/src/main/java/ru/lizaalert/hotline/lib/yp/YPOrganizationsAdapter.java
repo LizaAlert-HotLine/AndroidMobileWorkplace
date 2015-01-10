@@ -67,18 +67,23 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 import ru.lizaalert.hotline.lib.R;
 
 
-public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter {
+public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements ListAdapter, SectionIndexer {
     private static final String TAG = "8800";
     private static final Character TMP_CHAR = '\u00A0';
 
@@ -90,6 +95,9 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
     private int phonesId;
     private int descriptionId;
     private RealmResults<YPEntry> realmResults;
+
+    Object[] sections;
+    Integer[] positions;
 
     public YPOrganizationsAdapter(Context context,
                                   RealmResults<YPEntry> realmResults,
@@ -106,6 +114,26 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         this.phonesId = phonesId;
         this.descriptionId = descriptionId;
         this.realmResults = realmResults;
+
+        makeSectionsList();
+    }
+
+    public void makeSectionsList() {
+        ArrayList<String> sectionsList = new ArrayList<>();
+        ArrayList<Integer> sectionsPositions = new ArrayList<>();
+        String section = "";
+
+        for (int i = 0; i < realmResults.size(); i++) {
+            YPEntry u = realmResults.get(i);
+            if (!u.getSection().equals(section)) {
+                section = u.getSection();
+                sectionsList.add(section);
+                sectionsPositions.add(i);
+            }
+        }
+
+        sections = sectionsList.toArray();
+        positions = sectionsPositions.toArray(new Integer[sectionsPositions.size()]);
     }
 
     @Override
@@ -199,6 +227,30 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         }
 
         return convertView;
+    }
+
+    @Override
+    public Object[] getSections() {
+        Log.d(TAG, "getSections");
+        return sections;
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        if (sectionIndex < positions.length) {
+            return positions[sectionIndex];
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        for (int i = 0; i < positions.length; i++) {
+            if (positions[i] > position) {
+                return i - 1;
+            }
+        }
+        return positions.length - 1;
     }
 
     private static class ViewHolder {
