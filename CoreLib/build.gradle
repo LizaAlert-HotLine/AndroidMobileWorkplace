@@ -28,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "ru.lizaalert.hotline.lib"
+//        applicationId "ru.lizaalert.hotline.lib"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
