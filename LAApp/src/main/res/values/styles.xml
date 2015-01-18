@@ -17,4 +17,22 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="about_title" parent="android:Widget.TextView">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    <style name="about_text" parent="android:Widget.TextView">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">999</item>
+    </style>
+
 </resources>

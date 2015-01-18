@@ -28,3 +28,8 @@
 
 -keepattributes SourceFile,LineNumberTable
 -dontobfuscate
+-dontoptimize
+
+-keep class scala.ScalaObject {
+    public protected *;
+}

@@ -107,6 +107,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(this, getFragmentManager());
 
+        Log.d("8800", "mViewPager " + mViewPager);
+        Log.d("8800", "mSectionsPagerAdapter " + mSectionsPagerAdapter);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -237,6 +239,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 return true;
             case R.id.action_search:
                 onSearchRequested();
+                return true;
+            case R.id.action_about:
+                startActivity(new Intent(this, About.class));
                 return true;
         }
         return (super.onOptionsItemSelected(menuItem));

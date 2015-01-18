@@ -65,6 +65,8 @@ import android.util.Log;
 
 import com.yandex.metrica.YandexMetrica;
 
+import java.security.spec.ECField;
+
 import io.realm.Realm;
 import io.realm.exceptions.RealmMigrationNeededException;
 
@@ -74,7 +76,13 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        YandexMetrica.initialize(getApplicationContext(), getString(R.string.yandex_api_key));
+        try {
+//        Log.d("8800", getString(R.string.yandex_api_key));
+            YandexMetrica.initialize(getApplicationContext(), getString(R.string.yandex_api_key));
+        } catch (Exception e) {
+            Log.d("8800", "can not init y-metrics");
+            e.printStackTrace();
+        }
 
         // migration o_0
         try {

@@ -34,6 +34,9 @@
         <activity
             android:name="ru.lizaalert.common.ui.SettingsActivity"
             android:label="@string/action_settings"/>
+        <activity
+            android:name="ru.lizaalert.common.ui.About"
+            android:label="@string/menu_about"/>
 
         <activity android:name="ru.lizaalert.hotline.lib.yp.ui.SearchActivity"
             android:launchMode="singleTop" >
