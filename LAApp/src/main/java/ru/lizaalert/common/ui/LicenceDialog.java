@@ -121,13 +121,17 @@ public class LicenceDialog {
 
             // do reading, usually loop until end of file reading
             String mLine = reader.readLine();
-            String text = "";
+            StringBuilder sb = new StringBuilder();
+            String separator = System.getProperty("line.separator");
             while (mLine != null) {
-                text += mLine;
+                sb.append(mLine);
+                if (mLine.length() <= 2 || !mLine.matches(".*\\w.*")) {
+                    sb.append(separator).append(separator);
+                }
                 mLine = reader.readLine();
             }
-            Log.i(LOG_TAG, "text " + text);
-            return text;
+            Log.i(LOG_TAG, "text " + sb.toString());
+            return sb.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "couldn't open LICENSE file");
             e.printStackTrace();
