@@ -1,4 +1,6 @@
 <resources>
     <string name="search_hint">Найти организацию</string>
+    <string name="app_name">CoreLib</string>
+    <string name="app_label">LA</string>
 
 </resources>

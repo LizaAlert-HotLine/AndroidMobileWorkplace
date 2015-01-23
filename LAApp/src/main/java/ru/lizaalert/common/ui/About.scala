@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.{MenuItem, View}
 import android.widget.{LinearLayout, ImageView, TextView}
+import com.yandex.metrica.YandexMetrica
 import ru.lizaalert.common.{BuildConfig, R}
 import java.lang.StringBuilder
 
@@ -124,5 +125,15 @@ class About extends Activity {
     }
 
     return null
+  }
+
+  override def onResume() = {
+    super.onResume()
+    YandexMetrica.onResumeActivity(this)
+  }
+
+  override def onPause() = {
+    super.onPause()
+    YandexMetrica.onResumeActivity(this)
   }
 }

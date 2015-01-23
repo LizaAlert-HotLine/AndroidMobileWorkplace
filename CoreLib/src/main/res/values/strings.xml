@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Module</string>
+    <string name="app_name">CoreLib</string>
     <string name="app_label">LA</string>
     <string name="search_hint">Search organization</string>
 
