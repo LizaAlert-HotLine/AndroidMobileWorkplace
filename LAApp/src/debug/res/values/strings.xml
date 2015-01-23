@@ -5,6 +5,7 @@
 
     <string name="app_name">LA Debug</string>
     <string name="yandex_api_key">30452</string>
+    <string name="yandex_metrica_push_interval">2</string>
     <string name="msg_about">Liza Alert Common Application</string>
     <string name="msg_version">Version </string>
     <string name="msg_license">License</string>

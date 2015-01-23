@@ -79,6 +79,7 @@ import io.realm.RealmResults;
 
 import ru.lizaalert.hotline.lib.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
+import ru.lizaalert.hotline.lib.YM;
 import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
 import ru.lizaalert.hotline.lib.yp.YPOrganizationsAdapter;
 import ru.lizaalert.hotline.lib.yp.YPEntry;
@@ -135,6 +136,9 @@ public class YellowPagesFragment extends Fragment {
 
                 Settings.instance(getActivity()).setYellowPagesRegion(region.getRegion());
                 setEntriesAdapter(getYPEntries(region.getRegion()));
+
+                // track event
+                YM.reportRegionEvent(region.getRegion());
             }
 
             @Override

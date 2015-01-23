@@ -1,6 +1,6 @@
 /*
-    Copyright (c) 2014 Igor Tseglevskiy <igor.tseglevskiy@gmail.com>
-    Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
+    Copyright (c) 2015 Ivan Demushkin <ivndgtl@gmail.com>
+    Copyright (c) 2015 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
     Горячей линии по пропавшим детям".
@@ -58,145 +58,57 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.lib.yp.ui;
+package ru.lizaalert.hotline.lib;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 import com.yandex.metrica.YandexMetrica;
 
-import ru.lizaalert.hotline.lib.R;
-import ru.lizaalert.hotline.lib.settings.Settings;
-import ru.lizaalert.hotline.lib.YM;
-import ru.lizaalert.hotline.lib.yp.MySuggestionProvider;
-import ru.lizaalert.hotline.lib.yp.YPEntry;
-import ru.lizaalert.hotline.lib.yp.YPOrganizationsAdapter;
-import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
+import java.util.Map;
+import java.util.HashMap;
 
-public class SearchActivity extends Activity {
-    public static final String TAG = "8800";
+/**
+ * Wrapper of Yandex Metrica
+ */
+public class YM {
 
-    private ListView listView;
+    private static final String TAG = "8800";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+    // Events name
+    private static final String YM_EVENT_SEARCH = "Search";
+    private static final String YM_EVENT_REGION = "Region";
 
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+    // Event attributes name
+    private static final String YM_ATTR_SEARCH_QUERY = "Query";
+    private static final String YM_ATTR_REGION_NAME = "Name";
 
-        listView = (ListView)findViewById(R.id.list);
-
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-            doMySearch(query);
+    // Register search event
+    public static void reportSearchEvent(String query) {
+        if (query == null || query.isEmpty()) {
+            Log.w(TAG, "Empty search query");
+            return;
         }
+        // event attributes
+        Map<String, Object> attr = new HashMap<String, Object>();
+        attr.put(YM_ATTR_SEARCH_QUERY, query);
+
+        YandexMetrica.reportEvent(YM_EVENT_SEARCH, attr);
+
+        Log.d(TAG, String.format("reportSearchEvent: %s / %s", YM_EVENT_SEARCH, attr.toString()));
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
+    // Register region choosing event
+    public static void reportRegionEvent(String regionName) {
+        if (regionName == null || regionName.isEmpty()) {
+            Log.w(TAG, "Empty region name");
+            return;
         }
-    }
+        // event attributes
+        Map<String, Object> attr = new HashMap<String, Object>();
+        attr.put(YM_ATTR_REGION_NAME, regionName);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        YandexMetrica.reportEvent(YM_EVENT_REGION, attr);
 
-        // resume metric
-        YandexMetrica.onResumeActivity(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // pause metric
-        YandexMetrica.onPauseActivity(this);
-    }
-
-    private void doMySearch(String query) {
-        Log.d(TAG, "query " + query);
-        setTitle(query);
-
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-
-        String[] splited = query.split("\\s+");
-
-        String region = Settings.instance(this).getYellowPagesRegion();
-
-        Realm realm = Realm.getInstance(this);
-
-        RealmQuery<YPEntry> dbquery = realm.where(YPEntry.class).equalTo("region.region", region);
-        for (String q : splited) {
-            if (q.length() > 0) {
-                dbquery.contains("searchstring", YellowPagesLoader.string4search(q), false);
-            }
-        }
-
-        RealmResults<YPEntry> entries = dbquery.findAll();
-        entries.sort("sortstring");
-
-        listView = (ListView) findViewById(ru.lizaalert.hotline.lib.R.id.list);
-        YPOrganizationsAdapter organizationsAdapter = new YPOrganizationsAdapter(this, entries, true,
-                R.layout.list_item_organization,
-                R.id.section,
-                R.id.organization_name,
-                R.id.phones,
-                R.id.descriprion
-        );
-
-        listView.setAdapter(organizationsAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView description = ((TextView) view.findViewById(R.id.descriprion));
-                if (description.getLineCount() == 4) {
-                    description.setMaxLines(Integer.MAX_VALUE);
-                } else {
-                    description.setMaxLines(4);
-                }
-                view.invalidate();
-            }
-        });
-
-        // track event
-        YM.reportSearchEvent(query);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return (super.onOptionsItemSelected(menuItem));
+        Log.d(TAG, String.format("reportRegionEvent: %s / %s", YM_EVENT_REGION, attr.toString()));
     }
 }
