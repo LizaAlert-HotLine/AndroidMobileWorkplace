@@ -77,10 +77,11 @@ public class MyApp extends Application {
         super.onCreate();
 
         try {
-//        Log.d("8800", getString(R.string.yandex_api_key));
+//            Log.d("8800", String.format("Init Yandex-Metrica: %s", getString(R.string.yandex_api_key)));
             YandexMetrica.initialize(getApplicationContext(), getString(R.string.yandex_api_key));
+            YandexMetrica.setDispatchPeriod(Integer.parseInt(getString(R.string.yandex_metrica_push_interval)));
         } catch (Exception e) {
-            Log.d("8800", "can not init y-metrics");
+            Log.e("8800", "cannot init y-metrics", e);
             e.printStackTrace();
         }
 

@@ -75,8 +75,12 @@ import android.widget.TextView;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+
+import com.yandex.metrica.YandexMetrica;
+
 import ru.lizaalert.hotline.lib.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
+import ru.lizaalert.hotline.lib.YM;
 import ru.lizaalert.hotline.lib.yp.MySuggestionProvider;
 import ru.lizaalert.hotline.lib.yp.YPEntry;
 import ru.lizaalert.hotline.lib.yp.YPOrganizationsAdapter;
@@ -117,6 +121,22 @@ public class SearchActivity extends Activity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             doMySearch(query);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // resume metric
+        YandexMetrica.onResumeActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // pause metric
+        YandexMetrica.onPauseActivity(this);
     }
 
     private void doMySearch(String query) {
@@ -166,6 +186,8 @@ public class SearchActivity extends Activity {
             }
         });
 
+        // track event
+        YM.reportSearchEvent(query);
     }
 
     @Override
