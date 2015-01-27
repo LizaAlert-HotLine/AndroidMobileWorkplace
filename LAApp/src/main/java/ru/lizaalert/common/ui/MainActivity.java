@@ -84,6 +84,7 @@ import com.yandex.metrica.YandexMetrica;
 import ru.lizaalert.common.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
 import ru.lizaalert.hotline.lib.yp.MySuggestionProvider;
+import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
 import ru.lizaalert.hotline.lib.yp.ui.YellowPagesFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -242,6 +243,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this, About.class));
+                return true;
+            case R.id.action_update_yp:
+                YellowPagesLoader.getInstance(this).fetchDataAsync();
                 return true;
         }
         return (super.onOptionsItemSelected(menuItem));

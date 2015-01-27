@@ -161,9 +161,9 @@ public class YellowPagesFragment extends Fragment {
             }
         });
 
-        setEntriesAdapter(getYPEntries(Settings.instance(getActivity()).getYellowPagesRegion()));
-
-        YellowPagesLoader.getInstance(getActivity()).fetchDataAsync();
+        String regionName = Settings.instance(getActivity()).getYellowPagesRegion();
+        setEntriesAdapter(getYPEntries(regionName));
+        YM.reportRegionEvent(regionName);
     }
 
     private void setEntriesAdapter (RealmResults<YPEntry> entries) {

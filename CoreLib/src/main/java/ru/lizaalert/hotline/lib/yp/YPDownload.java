@@ -58,48 +58,13 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.common;
+package ru.lizaalert.hotline.lib.yp;
 
-import android.app.Application;
-import android.util.Log;
+import io.realm.RealmObject;
 
-import com.yandex.metrica.YandexMetrica;
+public class YPDownload extends RealmObject {
+    private long when;
 
-import java.security.spec.ECField;
-
-import io.realm.Realm;
-import io.realm.exceptions.RealmMigrationNeededException;
-import ru.lizaalert.hotline.lib.yp.YellowPagesLoader;
-
-public class MyApp extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        try {
-//            Log.d("8800", String.format("Init Yandex-Metrica: %s", getString(R.string.yandex_api_key)));
-            YandexMetrica.initialize(getApplicationContext(), getString(R.string.yandex_api_key));
-            YandexMetrica.setDispatchPeriod(Integer.parseInt(getString(R.string.yandex_metrica_push_interval)));
-        } catch (Exception e) {
-            Log.e("8800", "cannot init y-metrics", e);
-            e.printStackTrace();
-        }
-
-        // migration o_0
-        try {
-            Realm realm = Realm.getInstance(getApplicationContext());
-            realm.close();
-
-            YellowPagesLoader.getInstance(this).fetchDataAsyncPeriodicaly();
-        } catch (RealmMigrationNeededException e) {
-            Realm.deleteRealmFile(getApplicationContext());
-            Realm realm = Realm.getInstance(getApplicationContext());
-            realm.close();
-
-            // если пересоздали базу - надо сразу получить содержимое
-            YellowPagesLoader.getInstance(this).fetchDataAsync();
-        }
-
-    }
+    public void setWhen(long when) { this.when = when; }
+    public long getWhen() { return when; }
 }

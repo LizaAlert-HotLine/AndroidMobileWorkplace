@@ -106,13 +106,44 @@ public class YellowPagesLoader {
     }
 
     /**
+     * Fetchs yellow pages from server periodically (once per 3 days).
+     */
+    public void fetchDataAsyncPeriodicaly() {
+        Realm myRealm = null;
+        YPDownload data;
+
+        try {
+            myRealm = Realm.getInstance(context);
+            RealmQuery<YPDownload> query = myRealm.where(YPDownload.class);
+            if (query.count() > 0) {
+                data = query.findFirst();
+            } else {
+                myRealm.beginTransaction();
+                data = myRealm.createObject(YPDownload.class);
+                data.setWhen(0);
+                myRealm.commitTransaction();
+            }
+
+            Log.d(TAG, "when: " + data.getWhen());
+
+//            if (System.currentTimeMillis() - data.getWhen() > 1000L * 60 * 60 * 24 * 3) {
+            if (System.currentTimeMillis() - data.getWhen() > 1000L * 20) {
+                fetchDataAsync();
+            }
+        } finally {
+            if (myRealm != null) {
+                myRealm.close();
+            }
+        }
+    }
+    /**
      * Fetchs yellow pages from server.
      * <p/>
      * On load writes data to file and displays it if nothing has been displayed yet
      */
     public void fetchDataAsync() {
         // загружаем данные за время жизни приложения только один раз
-        if (!success && (task == null || task.getStatus() == AsyncTask.Status.FINISHED)) {
+        if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
 
             task = new AsyncTask<Void, Void, Void>() {
 
@@ -233,6 +264,15 @@ public class YellowPagesLoader {
 //            Log.d(TAG, "searchstring " + sb.toString());
 
             }
+
+            RealmQuery<YPDownload> timeQuery = realm.where(YPDownload.class);
+            YPDownload data;
+            if (timeQuery.count() > 0) {
+                data = timeQuery.findFirst();
+            } else {
+                data = realm.createObject(YPDownload.class);
+            }
+            data.setWhen(System.currentTimeMillis());
 
             realm.commitTransaction();
             realm.refresh();

@@ -20,6 +20,7 @@
     <string name="title_fragment_yellow_pages">Телефонный справочник</string>
     <string name="clear_search_history">Очистить историю поиска</string>
 
+    <string name="menu_update_yp">Обновить справочник</string>
     <string name="menu_about">О программе</string>
 
 </resources>

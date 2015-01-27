@@ -35,6 +35,7 @@
     <string name="search_menu_item">Search</string>
     <string name="clear_search_history">Clear the search history</string>
 
+    <string name="menu_update_yp">Update</string>
     <string name="menu_about">About</string>
 
     <string name="yandex_metrica_push_interval">2</string>
