@@ -75,13 +75,15 @@ android {
             minifyEnabled true 
             proguardFile getDefaultProguardFile('proguard-android.txt')
             proguardFile 'proguard-project.txt'
-
-
         }
         release {
             if(System.getenv("KEYSTORE")) {
                 signingConfig signingConfigs.release
             }
+
+            minifyEnabled true
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+            proguardFile 'proguard-project.txt'
         }
     }
 

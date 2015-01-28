@@ -126,8 +126,7 @@ public class YellowPagesLoader {
 
             Log.d(TAG, "when: " + data.getWhen());
 
-//            if (System.currentTimeMillis() - data.getWhen() > 1000L * 60 * 60 * 24 * 3) {
-            if (System.currentTimeMillis() - data.getWhen() > 1000L * 20) {
+            if (System.currentTimeMillis() - data.getWhen() > 1000L * 60 * 60 * 24 * 3) {
                 fetchDataAsync();
             }
         } finally {
