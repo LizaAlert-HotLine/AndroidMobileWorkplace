@@ -14,15 +14,15 @@ repositories {
 }
 
 dependencies {
-    compile 'io.realm:realm-android:0.76.0'
+    compile 'io.realm:realm-android:0.78.0'
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.yandex.android:mobmetricalib:1.60'
     compile 'com.google.protobuf:protobuf-java:2.5.0'
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    compileSdkVersion "android-21"
+    buildToolsVersion "21.1.2"
 
     lintOptions {
         abortOnError true
@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
 //        applicationId "ru.lizaalert.hotline.lib"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

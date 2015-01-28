@@ -11,7 +11,7 @@ dependencies {
     compile 'com.google.protobuf:protobuf-java:2.5.0'
 
     compile "com.android.support:multidex:1.0.0"
-    compile "org.scala-lang:scala-library:2.11.4"
+    compile "org.scala-lang:scala-library:2.11.5"
 
     // to break 64k limit
     compile "org.scalaz:scalaz-core_2.11:7.1.0"
@@ -72,7 +72,7 @@ android {
         debug {
 //            applicationIdSuffix ".debug"
 
-            minifyEnabled false
+            minifyEnabled true 
             proguardFile getDefaultProguardFile('proguard-android.txt')
             proguardFile 'proguard-project.txt'
 

@@ -26,10 +26,20 @@
 -keep class com.yandex.metrica.** { *; }
 -dontwarn com.yandex.metrica.**
 
--keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable,InnerClasses,EnclosingMethod,Signature
 -dontobfuscate
 -dontoptimize
+-dontpreverify
+-ignorewarnings
 
+-dontwarn scala.**
 -keep class scala.ScalaObject {
     public protected *;
 }
+# temporary workaround; see Scala issue SI-5397
+-keep class scala.collection.SeqLike {
+    public protected *;
+}
+
+-dontwarn sun.misc.**
+-dontwarn org.apache.**
