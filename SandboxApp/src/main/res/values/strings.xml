@@ -15,6 +15,7 @@
     <string name="pref_general">General</string>
     <string name="pref_phone">Phone number</string>
     <string name="vk_group">VK GROUP</string>
+    <string name="btn_skype_text">Skype</string>
     <string name="post_successful">Post successful</string>
     <string name="vk_send_group_request_title">Oops, error occurred</string>
     <string name="vk_send_group_request_message">May be you need to sign up to the group</string>
