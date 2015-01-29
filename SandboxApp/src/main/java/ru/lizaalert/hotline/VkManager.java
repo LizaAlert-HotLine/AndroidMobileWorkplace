@@ -60,8 +60,6 @@
 
 package ru.lizaalert.hotline;
 
-import ru.lizaalert.hotline.sandbox.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

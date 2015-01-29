@@ -70,12 +70,9 @@ import android.util.Log;
 
 import com.vk.sdk.VKSdk;
 
-import ru.lizaalert.hotline.sandbox.R;
+import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.VkManager;
 
-/**
- * Created by prozorov on 05.09.14.
- */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.lizaalert.hotline.sandbox"
+    package="ru.lizaalert.hotline"
+    xmlns:tools="http://schemas.android.com/tools"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -13,6 +14,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
+        android:name="ru.lizaalert.hotline.SandboxApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -38,6 +40,50 @@
             </intent-filter>
         </receiver>
 
+        <!-- Yandex Metrica required manifest entries START -->
+        <service
+            android:name="com.yandex.metrica.MetricaService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":Metrica"
+            tools:ignore="ExportedService">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.yandex.metrica.IMetricaService"/>
+                <data android:scheme="metrica"/>
+            </intent-filter>
+
+            <meta-data android:name="metrica:api:level" android:value="16"/>
+        </service>
+
+        <receiver
+            android:name="com.yandex.metrica.MetricaEventHandler"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+
+            <intent-filter>
+                <action android:name="com.yandex.metrica.intent.action.SYNC"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="ru.lizaalert.hotline.MetricaContentProvider"
+            android:authorities="ru.lizaalert.hotline.MetricaContentProvider"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider"/>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ apply plugin: "jp.leafytree.android-scala"
 dependencies {
 //    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':CoreLib')
+
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile group: 'com.android.support', name: 'support-v13', version: '21.0.2'
     compile 'com.yandex.android:mobmetricalib:1.60'

@@ -18,8 +18,8 @@ android {
       }
 
     defaultConfig {
-        applicationId "ru.lizaalert.hotline.sandbox"
-        testApplicationId "ru.lizaalert.hotline.sandbox.test"
+        applicationId "ru.lizaalert.hotline"
+        testApplicationId "ru.lizaalert.hotline.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
