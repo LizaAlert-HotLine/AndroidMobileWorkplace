@@ -67,7 +67,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -86,6 +88,9 @@ import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
 import ru.lizaalert.hotline.SmsChannel;
 import ru.lizaalert.hotline.VkManager;
+import ru.lizaalert.hotline.lib.settings.SettingsConsts;
+import ru.lizaalert.hotline.mail.AsyncSmtpSender;
+import ru.lizaalert.hotline.mail.SmtpSender;
 
 /**
  * Created by defuera on 09/10/14.
@@ -233,7 +238,7 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
 
                 break;
             case R.id.btn_email:
-                Toast.makeText(getActivity(), "getActivity() is dummy Email button", Toast.LENGTH_LONG).show();
+                sendMail();
                 break;
             case R.id.btn_vk:
                 vkManager.requestWallPost(composeMessage());
@@ -249,6 +254,22 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
                 startActivity(skype_intent);
                 break;
         }
+    }
+
+    private void sendMail() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
+        AsyncSmtpSender sender = new AsyncSmtpSender(getActivity());
+        sender.execute(
+                sharedPreferences.getString(SettingsConsts.PREF_SMTP_MAILHOST, "smtp.mail.ru"),
+                sharedPreferences.getString(SettingsConsts.PREF_SMTP_LOGIN, ""),
+                sharedPreferences.getString(SettingsConsts.PREF_SMTP_PASSWORD, ""),
+                sharedPreferences.getString(SettingsConsts.PREF_SMTP_FROM, ""),
+                sharedPreferences.getString(SettingsConsts.PREF_SMTP_TO, ""),
+                "форма " + etCity.getText(), // subject
+                composeMessage() // body
+        );
+
     }
 
     private void sendSms() {

@@ -30,4 +30,10 @@
     <string name="no_data_retry_fetch">Could now load yellow pages, try to refresh once you have connection</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <string name="pref_smtp_group">SMTP</string>
+    <string name="pref_smtp_mailhost">SMTP Server</string>
+    <string name="pref_smtp_login">Login</string>
+    <string name="pref_smtp_password">Password</string>
+    <string name="pref_smtp_from">From address</string>
+    <string name="pref_smtp_to">To address</string>
 </resources>

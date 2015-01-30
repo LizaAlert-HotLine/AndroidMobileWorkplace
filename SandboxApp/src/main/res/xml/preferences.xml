@@ -12,4 +12,30 @@
             android:title="@string/login_vk"
             android:key="pref_login_vk"/>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_smtp_group">
+        <EditTextPreference
+            android:title="@string/pref_smtp_mailhost"
+            android:key="pref_smtp_mailhost"
+            android:inputType="text"/>
+        <EditTextPreference
+            android:title="@string/pref_smtp_login"
+            android:key="pref_smtp_login"
+            android:inputType="text"/>
+        <EditTextPreference
+            android:title="@string/pref_smtp_password"
+            android:key="pref_smtp_password"
+            android:inputType="text"/>
+        <EditTextPreference
+            android:title="@string/pref_smtp_from"
+            android:key="pref_smtp_from"
+            android:inputType="text"/>
+        <EditTextPreference
+            android:title="@string/pref_smtp_to"
+            android:key="pref_smtp_to"
+            android:inputType="text"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

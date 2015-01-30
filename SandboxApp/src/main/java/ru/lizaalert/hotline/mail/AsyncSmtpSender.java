@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Anton Prozorov <avprozorov@gmail.com>
+    Copyright (c) 2014 Igor Tseglevskiy <igor.tseglevskiy@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
@@ -58,77 +58,56 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.lib.settings;
+package ru.lizaalert.hotline.mail;
 
-public class SettingsConsts {
-    /**
-     * {@value} phone number to send SMS
-     */
-    public final static String PREF_PHONE_DEST = "pref_phone_dest";
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
-    /**
-     * {@value} last entered applicant's phone number
-     */
-    public final static String PREF_PHONE_APPL_RECENT = "pref_phone_appl_recent";
+public class AsyncSmtpSender extends AsyncTask<String, Void, String> {
+    private Context context;
 
-    /**
-     * {@value} last entered city of loss
-     */
-    public final static String PREF_CITY_RECENT = "pref_city_recent";
+    public AsyncSmtpSender(Context context) {
+        this.context = context;
+    }
 
-    /**
-     * {@value} last entered name
-     */
-    public final static String PREF_NAME_RECENT = "pref_name_recent";
+    @Override
+    protected String doInBackground(String... params) {
+        if (params.length != 7) {
+            throw new RuntimeException("incorrect parameters list");
+        }
+        String mailhost = params[0];
+        String login = params[1];
+        String password = params[2];
 
-    /**
-     * {@value} last entered date of birth
-     */
-    public final static String PREF_BIRTHDAY_RECENT = "pref_birthday_recent";
+        String mailFrom = params[3];
+        String mailTo = params[4];
+        String mailSubject = params[5];
+        String mailBody = params[6];
 
-    /**
-     * {@value} last entered description
-     */
-    public final static String PREF_DESCR_RECENT = "pref_descr_recent";
+        Log.d("8800", "host " + mailhost
+                + " login " + login
+                + " password " + password
+                + " from " + mailFrom
+                + " to " + mailTo);
 
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_REGION = "pref_organization_region";
+        try {
+            SmtpSender sender = new SmtpSender(mailhost, login, password);
+            sender.sendMail(mailSubject,
+                    mailBody,
+                    mailFrom,
+                    mailTo
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error: " + e.getMessage();
+        }
+        return "sent";
+    }
 
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_LIST_POSITION = "pref_yellow_pages_list_position";
-
-    /**
-     * {@value} first lauch flag
-     */
-    public static final String PREF_LICENCE_ACCEPTED = "pref_first_launch";
-
-    /**
-     * {@value} SMTP host
-     */
-    public static final String PREF_SMTP_MAILHOST = "pref_smtp_mailhost";
-
-    /**
-     * {@value} SMTP login
-     */
-    public static final String PREF_SMTP_LOGIN = "pref_smtp_login";
-
-    /**
-     * {@value} SMTP password
-     */
-    public static final String PREF_SMTP_PASSWORD = "pref_smtp_password";
-
-    /**
-     * {@value} SMTP from
-     */
-    public static final String PREF_SMTP_FROM = "pref_smtp_from";
-
-    /**
-     * {@value} SMTP to
-     */
-    public static final String PREF_SMTP_TO = "pref_smtp_to";
-
+    @Override
+    protected void onPostExecute(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+    }
 }

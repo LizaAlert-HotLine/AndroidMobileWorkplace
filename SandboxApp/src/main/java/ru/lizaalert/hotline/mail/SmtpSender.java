@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Anton Prozorov <avprozorov@gmail.com>
+    Copyright (c) 2014 Igor Tseglevskiy <igor.tseglevskiy@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
@@ -58,77 +58,109 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.hotline.lib.settings;
+package ru.lizaalert.hotline.mail;
 
-public class SettingsConsts {
-    /**
-     * {@value} phone number to send SMS
-     */
-    public final static String PREF_PHONE_DEST = "pref_phone_dest";
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
-    /**
-     * {@value} last entered applicant's phone number
-     */
-    public final static String PREF_PHONE_APPL_RECENT = "pref_phone_appl_recent";
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
 
-    /**
-     * {@value} last entered city of loss
-     */
-    public final static String PREF_CITY_RECENT = "pref_city_recent";
+public class SmtpSender {
+    private String user;
+    private String password;
+    private Session session;
+    private PasswordAuthentication auth;
+    private Authenticator authenticator;
 
-    /**
-     * {@value} last entered name
-     */
-    public final static String PREF_NAME_RECENT = "pref_name_recent";
+    public SmtpSender(String mailhost, String user, String password) {
+        this.user = user;
+        this.password = password;
 
-    /**
-     * {@value} last entered date of birth
-     */
-    public final static String PREF_BIRTHDAY_RECENT = "pref_birthday_recent";
+        Properties props = new Properties();
 
-    /**
-     * {@value} last entered description
-     */
-    public final static String PREF_DESCR_RECENT = "pref_descr_recent";
+        props.setProperty("mail.host", mailhost);
+        props.setProperty("mail.transport.protocol", "smtp");
 
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_REGION = "pref_organization_region";
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.auth", "true");
 
-    /**
-     * {@value} last chosen organization region position in Yellow Pages
-     */
-    public static final String PREF_YELLOW_PAGES_LIST_POSITION = "pref_yellow_pages_list_position";
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.quitwait", "false");
 
-    /**
-     * {@value} first lauch flag
-     */
-    public static final String PREF_LICENCE_ACCEPTED = "pref_first_launch";
+        auth = new PasswordAuthentication(user, password);
 
-    /**
-     * {@value} SMTP host
-     */
-    public static final String PREF_SMTP_MAILHOST = "pref_smtp_mailhost";
+        authenticator = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return auth;
+            }
+        };
 
-    /**
-     * {@value} SMTP login
-     */
-    public static final String PREF_SMTP_LOGIN = "pref_smtp_login";
+        session = Session.getDefaultInstance(props, authenticator);
+    }
 
-    /**
-     * {@value} SMTP password
-     */
-    public static final String PREF_SMTP_PASSWORD = "pref_smtp_password";
+    public synchronized void sendMail(String subject,
+                                      String body,
+                                      String sender,
+                                      String recipients) throws Exception {
+        MimeMessage message = new MimeMessage(session);
 
-    /**
-     * {@value} SMTP from
-     */
-    public static final String PREF_SMTP_FROM = "pref_smtp_from";
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
 
-    /**
-     * {@value} SMTP to
-     */
-    public static final String PREF_SMTP_TO = "pref_smtp_to";
+        message.setSender(new InternetAddress(sender));
+        message.setSubject(subject);
+        message.setDataHandler(handler);
 
+        if (recipients.indexOf(',') > 0) {
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+        } else {
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        }
+
+        Transport.send(message);
+    }
+
+    public class ByteArrayDataSource implements DataSource {
+        private byte[] data;
+        private String type;
+
+        public ByteArrayDataSource(byte[] data, String type) {
+            super();
+            this.data = data;
+            this.type = type;
+        }
+
+        @Override
+        public String getContentType() {
+            return type;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(data);
+        }
+
+        @Override
+        public String getName() {
+            return "ByteArrayDataSource";
+        }
+
+        @Override
+        public OutputStream getOutputStream() throws IOException {
+            throw new IOException("Not Supported");
+        }
+    }
 }
