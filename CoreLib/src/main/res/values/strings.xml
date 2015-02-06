@@ -6,4 +6,7 @@
     <string name="yandex_api_key">31677</string>
     <string name="yandex_metrica_push_interval">2</string>
 
+    <string name="yp_context_copy">Copy to clipboard</string>
+    <string name="yp_context_share">Share</string>
+
 </resources>

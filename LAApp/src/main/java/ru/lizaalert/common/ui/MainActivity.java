@@ -212,6 +212,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         SearchView searchView = (SearchView) item.getActionView();
 
         // Assumes current activity is the searchable activity
+        assert searchView != null;
+        assert searchManager != null;
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //        searchView.setIconifiedByDefault(false);
 
