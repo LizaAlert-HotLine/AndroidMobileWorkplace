@@ -28,8 +28,6 @@
 
 -keepattributes SourceFile,LineNumberTable,InnerClasses,EnclosingMethod,Signature
 -dontobfuscate
--dontoptimize
--dontpreverify
 -ignorewarnings
 
 -dontwarn scala.**
@@ -43,3 +41,5 @@
 
 -dontwarn sun.misc.**
 -dontwarn org.apache.**
+
+-verbose

@@ -3,8 +3,8 @@
     <string name="app_label">LA</string>
     <string name="search_hint">Search organization</string>
 
-    <string name="yandex_api_key">31677</string>
-    <string name="yandex_metrica_push_interval">2</string>
+    <string name="yandex_api_key" translatable="false">31677</string>
+    <string name="yandex_metrica_push_interval" translatable="false">2</string>
 
     <string name="yp_context_copy">Copy to clipboard</string>
     <string name="yp_context_share">Share</string>
