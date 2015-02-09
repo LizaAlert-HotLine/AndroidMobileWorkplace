@@ -77,10 +77,12 @@ public class YM {
     // Events name
     private static final String YM_EVENT_SEARCH = "Search";
     private static final String YM_EVENT_REGION = "Region";
+    private static final String YM_EVENT_FEATURE = "Feature";
 
     // Event attributes name
     private static final String YM_ATTR_SEARCH_QUERY = "Query";
     private static final String YM_ATTR_REGION_NAME = "Name";
+    private static final String YM_ATTR_SHARE = "Share";
 
     // Register search event
     public static void reportSearchEvent(String query) {
@@ -110,5 +112,18 @@ public class YM {
         YandexMetrica.reportEvent(YM_EVENT_REGION, attr);
 
         Log.d(TAG, String.format("reportRegionEvent: %s / %s", YM_EVENT_REGION, attr.toString()));
+    }
+
+    // Register share event
+    public static void reportYPShareEvent(String type) {
+        if (type == null || type.isEmpty()) {
+            Log.w(TAG, "Empty share type");
+            return;
+        }
+        // event attributes
+        Map<String, Object> attr = new HashMap<String, Object>();
+        attr.put(YM_ATTR_SHARE, type);
+
+        YandexMetrica.reportEvent(YM_EVENT_FEATURE, attr);
     }
 }

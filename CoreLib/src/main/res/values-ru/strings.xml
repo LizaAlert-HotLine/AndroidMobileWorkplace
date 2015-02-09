@@ -3,4 +3,7 @@
     <string name="app_name">CoreLib</string>
     <string name="app_label">LA</string>
 
+		<string name="yp_context_copy">Копировать в буфер</string>
+		<string name="yp_context_share">Поделиться</string>
+
 </resources>

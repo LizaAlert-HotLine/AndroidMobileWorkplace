@@ -246,19 +246,23 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
                 vkManager.requestWallPost(composeMessage());
                 break;
             case R.id.btn_skype:
-                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("8800", composeMessage());
-                clipboard.setPrimaryClip(clip);
-
-                Intent skype_intent = new Intent("android.intent.action.VIEW");
-                skype_intent.setClassName("com.skype.raider", "com.skype.raider.Main");
-                skype_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(skype_intent);
+                sendSkype();
                 break;
             case R.id.btn_gsheet:
                 saveToGoogleSheet();
                 break;
         }
+    }
+
+    private void sendSkype() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("8800", composeMessage());
+        clipboard.setPrimaryClip(clip);
+
+        Intent skype_intent = new Intent("android.intent.action.VIEW");
+        skype_intent.setClassName("com.skype.raider", "com.skype.raider.Main");
+        skype_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(skype_intent);
     }
 
     private void sendMail() {

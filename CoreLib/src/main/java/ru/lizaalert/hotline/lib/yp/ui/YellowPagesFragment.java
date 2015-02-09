@@ -62,9 +62,16 @@ package ru.lizaalert.hotline.lib.yp.ui;
 
 import android.app.Fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -112,6 +119,8 @@ public class YellowPagesFragment extends Fragment {
         if (contentView == null) {
             contentView = inflater.inflate(R.layout.fragment_yellow_pages, container, false);
         }
+
+        registerForContextMenu(contentView.findViewById(R.id.list));
         return contentView;
     }
 
@@ -250,5 +259,55 @@ public class YellowPagesFragment extends Fragment {
         if (realm != null) {
             realm.removeAllChangeListeners();
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.yp_context_menu, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        View v = info.targetView;
+        StringBuilder sb = new StringBuilder();
+
+        // какой-то очень неправильный способ получить данные. нужно осваивать ContentProvider
+        sb.append( ((TextView)v.findViewById(R.id.organization_name)).getText());
+        sb.append("\n");
+        sb.append( ((TextView)v.findViewById(R.id.phones)).getText());
+        sb.append("\n");
+        sb.append(((TextView) v.findViewById(R.id.descriprion)).getText());
+
+        if (id == R.id.yp_context_copy) {
+            Log.d(TAG, "copy");
+
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("LA", sb.toString());
+            clipboard.setPrimaryClip(clip);
+
+            YM.reportYPShareEvent("copy");
+            return true;
+        } else if (id == R.id.yp_context_share) {
+            Log.d(TAG, "share");
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+
+            YM.reportYPShareEvent("share");
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
+
     }
 }
