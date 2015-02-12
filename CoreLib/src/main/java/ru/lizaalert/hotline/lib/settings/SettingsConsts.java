@@ -62,6 +62,16 @@ package ru.lizaalert.hotline.lib.settings;
 
 public class SettingsConsts {
     /**
+     * {@value} account mail
+     */
+    public final static String PREF_ACCOUNT_MAIL = "pref_account_mail";
+
+    /**
+     * {@value} account token
+     */
+    public final static String PREF_ACCOUNT_TOKEN = "pref_account_token";
+
+    /**
      * {@value} phone number to send SMS
      */
     public final static String PREF_PHONE_DEST = "pref_phone_dest";
