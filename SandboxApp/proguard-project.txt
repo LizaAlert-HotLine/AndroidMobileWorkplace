@@ -79,3 +79,7 @@
     public protected *;
 }
 
+-keep class com.google.gdata.model.atom.Content { *; }
+-keep class com.google.gdata.model.atom.Category { *; }
+-keep class * extends com.google.gdata.model.atom.Content { *; }
+-keep class * extends com.google.gdata.model.Element { *; }

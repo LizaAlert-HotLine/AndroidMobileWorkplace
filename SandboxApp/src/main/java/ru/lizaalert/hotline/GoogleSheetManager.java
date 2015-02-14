@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Igor Tseglevskiy <igor.tseglevskiy@gmail.com>
+    Copyright (c) 2014 Ivan Demushkin <ivndgtl@gmail.com>
     Copyright (c) 2014 Other contributors as noted in the AUTHORS file.
 
     Этот файл является частью приложения "Мобильное рабочее место оператора
