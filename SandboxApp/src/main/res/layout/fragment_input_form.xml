@@ -56,6 +56,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone|flagNoExtractUi" />
+
+        <Button
+            android:id="@+id/btn_auth"
+            android:text="Authentication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn_sms"
             android:text="SMS"

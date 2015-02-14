@@ -251,5 +251,42 @@ public class Settings {
     }
 
 
+    /**
+     * Get account mail
+     * @return String
+     */
+    public String getAccountMail() {
+        return sharedPreferences.getString(SettingsConsts.PREF_ACCOUNT_MAIL, "");
+    }
+
+    /**
+     * Set account mail
+     * @param mail String
+     */
+    public void setAccountMail(String mail) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_ACCOUNT_MAIL, mail);
+        editor.apply();
+    }
+
+    /**
+     * Get account token
+     * @return String
+     */
+    public String getAccountToken() {
+        return sharedPreferences.getString(SettingsConsts.PREF_ACCOUNT_TOKEN, "");
+    }
+
+    /**
+     * Set account token
+     * @param token String
+     */
+    public void setAccountToken(String token) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SettingsConsts.PREF_ACCOUNT_TOKEN, token);
+        editor.apply();
+    }
+
+
 
 }

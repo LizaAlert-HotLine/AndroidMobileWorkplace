@@ -58,142 +58,76 @@
     other dealings in this Software without prior written authorization.
  */
 
-package ru.lizaalert.common.ui
+package ru.lizaalert.hotline.auth
 
-import java.io.{IOException, InputStreamReader, BufferedReader}
-
-import android.app.Activity
-import android.os.Bundle
+import android.content.{Context, AsyncTaskLoader}
+import android.content.pm.PackageManager
 import android.util.Log
-import android.view.{MenuItem, View}
-import android.widget.{LinearLayout, ImageView, TextView}
-import com.yandex.metrica.YandexMetrica
-import ru.lizaalert.common.{BuildConfig, R}
-import java.lang.StringBuilder
+import com.google.android.gms.auth.GoogleAuthUtil
 
-class About extends Activity {
-  override def onCreate(savedInstanceState: Bundle) = {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_about)
-    getActionBar.setHomeButtonEnabled(true)
-    getActionBar.setDisplayHomeAsUpEnabled(true)
+class GetTokenLoader (context:Context, account:String, scope:String) extends AsyncTaskLoader[GetTokenResult] (context)  {
+  val pm:PackageManager = getContext().getPackageManager()
+  var result:GetTokenResult = null
 
-    val pInfo = getPackageManager().getPackageInfo(getPackageName(), 0)
-
-    val am = getAssets
-
-
-
-    val sb = (new StringBuilder)
-      .append(getString(R.string.msg_about))
-      .append("\n\n")
-      .append(getString(R.string.msg_version))
-      .append(" ")
-      .append(pInfo.versionName)
-      .append(" (")
-      .append(BuildConfig.VERSION_CODE)
-      .append(")")
-
-    findViewById(R.id.about_version)
-      .asInstanceOf[TextView]
-      .setText(sb.toString)
-
-    val authors = findViewById(R.id.about_authors).asInstanceOf[TextView]
-    val authorsLayout = findViewById(R.id.authors_layout).asInstanceOf[LinearLayout]
-    val iAuthorsOpen = findViewById(R.id.ico_authors_open).asInstanceOf[ImageView]
-    val iAuthorsClose = findViewById(R.id.ico_authors_close).asInstanceOf[ImageView]
-    val authorsText = readFileFromAssets("AUTHORS")
-    if (authorsText != null) {
-      authorsLayout.setOnClickListener(new View.OnClickListener() {
-        def onClick(v: View): Unit = {
-          toggleTV(authors, iAuthorsOpen, iAuthorsClose)
-        }
-      })
-      authors.setText(authorsText)
-    } else {
-      authors.setVisibility(View.GONE)
-    }
-
-    val license = findViewById(R.id.about_license).asInstanceOf[TextView]
-    val licenseLayout = findViewById(R.id.license_layout).asInstanceOf[LinearLayout]
-    val iLicenseOpen = findViewById(R.id.ico_license_open).asInstanceOf[ImageView]
-    val iLicenseClose = findViewById(R.id.ico_license_close).asInstanceOf[ImageView]
-    val licenseText = readFileFromAssets("LICENSE")
-    if (licenseText != null) {
-      license.setText(licenseText)
-      licenseLayout.setOnClickListener(new View.OnClickListener() {
-        def onClick(v: View): Unit = {
-          toggleTV(license, iLicenseOpen, iLicenseClose)
-        }
-      })
-    } else {
-      licenseLayout.setVisibility(View.GONE)
-    }
-
-    //    val scalaTextView = findViewById(R.id.scala_text_view).asInstanceOf[TextView]
-//    scalaTextView.setText(new HelloJava().say())
-
-    Log.d("debug", "HelloActivity onCreate")
-  }
-
-  override def onOptionsItemSelected(menuItem: MenuItem): Boolean = {
-    menuItem.getItemId match {
-      case android.R.id.home =>
-        onBackPressed
-        return true
-    }
-    return (super.onOptionsItemSelected(menuItem))
-  }
-
-  def toggleTV (view:TextView, iOpen:ImageView, iClose:ImageView) = {
-    if (view.getVisibility == View.VISIBLE) {
-      view.setVisibility(View.GONE)
-      iOpen.setVisibility(View.GONE)
-      iClose.setVisibility(View.VISIBLE)
-    } else {
-      view.setVisibility(View.VISIBLE)
-      iOpen.setVisibility(View.VISIBLE)
-      iClose.setVisibility(View.GONE)
-    }
-  }
-
-  private def readFileFromAssets(fileName: String): String = {
+  override def loadInBackground(): GetTokenResult = {
+    l("GetTokenLoader loadInBackground")
     try {
-      val reader = new BufferedReader(new InputStreamReader(getAssets.open(fileName), "UTF-8"))
-      val sb = new java.lang.StringBuilder
-
-      var s = reader.readLine
-      while (s != null) {
-        sb.append(s)
-        sb.append(System.getProperty("line.separator"))
-        s = reader.readLine
-      }
-
-//      Iterator
-//        .continually(reader.readLine)
-//        .takeWhile(null !=)
-//        .foreach(sb.append)
-
-      reader.close
-      return sb.toString
+      val token = GoogleAuthUtil.getToken(context, account, scope)
+      l("got token " + token)
+      result = new GetTokenResult(token)
+      result
     }
     catch {
-      case e: IOException => {
-        Log.e("8800", "couldn't open $fileName")
-        e.printStackTrace
+      case e: Exception => {
+        l("got exception " + e.getMessage)
+        new GetTokenResult(e)
       }
     }
-
-    return null
   }
 
-  override def onResume() = {
-    super.onResume()
-    YandexMetrica.onResumeActivity(this)
+  override def deliverResult(data: GetTokenResult): Unit = {
+    l("GetTokenLoader deliverResult " + data)
+    if (isReset) {
+      l("isReset")
+      return
+    }
+
+    val old = result // wtf?
+    result = data
+
+    if (isStarted) {
+      l("isStarted")
+      super.deliverResult(data)
+    }
   }
 
-  override def onPause() = {
-    super.onPause()
-    YandexMetrica.onResumeActivity(this)
+  override def onStartLoading(): Unit = {
+    l("GetTokenLoader onStartLoading")
+    if (result != null) {
+      deliverResult(result)
+    } else {
+      forceLoad()
+    }
+  }
+
+
+  override def onStopLoading(): Unit = {
+    l("GetTokenLoader onStopLoading")
+    cancelLoad()
+  }
+
+
+  override def onReset(): Unit = {
+    l("GetTokenLoader onReset")
+    super.onReset()
+    onStopLoading()
+    result = null
+  }
+
+  def l(s:String) = {
+    Log.d("8800", s)
   }
 }
+
+
+

@@ -60,10 +60,6 @@
 
 package ru.lizaalert.hotline;
 
-/**
- * Created by Ivan Demushkin on 30.01.2015
- */
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -80,8 +76,9 @@ import com.google.gdata.util.ServiceException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.List;
+
+import ru.lizaalert.hotline.lib.settings.Settings;
 
 public class GoogleSheetManager extends AsyncTask<Object, Void, Boolean> {
 
@@ -89,14 +86,11 @@ public class GoogleSheetManager extends AsyncTask<Object, Void, Boolean> {
 
     private static final String SHEET_META_URL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
     private static final String SHEET_NAME = "LizaAlert data";
-    private static final String GOOGLE_LOGIN = "lizaalert.mobile";
-    private static final String GOOGLE_PWD = "LiZa@lErT";
 
     private SpreadsheetService service;
     private SpreadsheetFeed feedMain;
     private SpreadsheetEntry sheet;
     private WorksheetEntry worksheet;
-    private URL urlFeedList;
     private ListFeed feedList;
 
     private Context context;
@@ -122,8 +116,13 @@ public class GoogleSheetManager extends AsyncTask<Object, Void, Boolean> {
         service = new SpreadsheetService("LizaAlert.GoogleSpreadsheetIntegration");
         service.setProtocolVersion(SpreadsheetService.Versions.V3);
 
+        String token = Settings.instance(context).getAccountToken();
+        if (token == null || token.length() < 1) {
+            return false;
+        }
+
         try {
-            service.setUserCredentials(GOOGLE_LOGIN, GOOGLE_PWD);
+            service.setAuthSubToken(token);
 
             feedMain = service.getFeed(new URL(SHEET_META_URL), SpreadsheetFeed.class);
             List<SpreadsheetEntry> spreadsheets = feedMain.getEntries();

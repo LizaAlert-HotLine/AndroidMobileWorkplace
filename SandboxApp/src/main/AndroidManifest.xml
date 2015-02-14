@@ -35,7 +35,9 @@
         <activity
             android:name="ru.lizaalert.hotline.ui.SettingsActivity"
             android:label="@string/action_settings" />
+
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
+        <activity android:name="ru.lizaalert.hotline.auth.Auth" />
 
         <receiver android:name="ru.lizaalert.hotline.sms.SmsReceiver">
             <intent-filter android:priority="999">
