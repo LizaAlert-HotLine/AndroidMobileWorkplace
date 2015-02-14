@@ -84,13 +84,13 @@ import com.vk.sdk.VKUIHelper;
 import java.util.Calendar;
 
 import ru.lizaalert.hotline.ChannelHandler;
+import ru.lizaalert.hotline.GoogleSheetManager;
 import ru.lizaalert.hotline.R;
 import ru.lizaalert.hotline.lib.settings.Settings;
 import ru.lizaalert.hotline.SmsChannel;
 import ru.lizaalert.hotline.VkManager;
 import ru.lizaalert.hotline.lib.settings.SettingsConsts;
 import ru.lizaalert.hotline.mail.AsyncSmtpSender;
-import ru.lizaalert.hotline.mail.SmtpSender;
 
 /**
  * Created by defuera on 09/10/14.
@@ -106,6 +106,7 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
 
     private SmsChannel smsChannel;
     private VkManager vkManager;
+    private GoogleSheetManager gsheet;
     private View contentView;
 
     @Override
@@ -196,6 +197,7 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
         findViewById(R.id.btn_email).setOnClickListener(this);
         findViewById(R.id.btn_vk).setOnClickListener(this);
         findViewById(R.id.btn_skype).setOnClickListener(this);
+        findViewById(R.id.btn_gsheet).setOnClickListener(this);
     }
 
     @Override
@@ -246,6 +248,9 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
             case R.id.btn_skype:
                 sendSkype();
                 break;
+            case R.id.btn_gsheet:
+                saveToGoogleSheet();
+                break;
         }
     }
 
@@ -287,6 +292,11 @@ public class InputFormFragment extends Fragment implements View.OnClickListener,
                 + etName.getText() + "\n"
                 + etBirthday.getText() + "\n"
                 + etDescr.getText();
+    }
+
+    private void saveToGoogleSheet() {
+        GoogleSheetManager gsheet = new GoogleSheetManager(getActivity(), etPhone.getText().toString(), etCity.getText().toString(), etName.getText().toString(), etBirthday.getText().toString(), etDescr.getText().toString());
+        gsheet.execute();
     }
 
     @Override
