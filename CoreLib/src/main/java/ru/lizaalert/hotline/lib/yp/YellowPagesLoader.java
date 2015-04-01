@@ -249,6 +249,7 @@ public class YellowPagesLoader {
 
                 sb.append(phone4search(e.phone));
                 sb.append(string4search(e.description));
+                sb.append(string4search(e.address));
 
                 YPEntry entry = realm.createObject(YPEntry.class);
                 entry.setRegion(region);
@@ -257,6 +258,7 @@ public class YellowPagesLoader {
                 entry.setName(name);
                 entry.setPhone(e.phone);
                 entry.setEmail(e.email);
+                entry.setAddress(e.address);
                 entry.setDescription(e.description);
                 entry.setSearchstring(sb.toString());
                 entry.setSortstring((section+shortname).toLowerCase());
@@ -352,6 +354,8 @@ public class YellowPagesLoader {
             public final String email;
             public final String shortname;
             public final String section;
+            public final String address;
+
 
             public Entry(String region,
                          String section,
@@ -359,14 +363,17 @@ public class YellowPagesLoader {
                          String name,
                          String phone,
                          String email,
-                         String description) {
-                this.region = (region == null ? null : region.trim());
-                this.section = (section == null ? null : section.trim());
-                this.shortname = (shortname == null ? null : shortname.trim());
-                this.name = (name == null ? null : name.trim());
-                this.phone = (phone == null ? null : phone.trim());
-                this.email = (email == null ? null : email.trim());
-                this.description = (description == null ? null : description.trim());
+                         String description,
+                         String address
+            ) {
+                this.region = (region == null ? "" : region.trim());
+                this.section = (section == null ? "" : section.trim());
+                this.shortname = (shortname == null ? "" : shortname.trim());
+                this.name = (name == null ? "" : name.trim());
+                this.phone = (phone == null ? "" : phone.trim());
+                this.email = (email == null ? "" : email.trim());
+                this.description = (description == null ? "" : description.trim());
+                this.address = (address == null ? "" : address.trim());
             }
         }
 
@@ -412,6 +419,7 @@ public class YellowPagesLoader {
             String phone = null;
             String email = null;
             String description = null;
+            String address = null;
 
             while (parser.next() != XmlPullParser.END_TAG) {
                 if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -432,11 +440,13 @@ public class YellowPagesLoader {
                     email = readString(parser, tag);
                 } else if (tag.equals(ns + "description")) {
                     description = readString(parser, tag);
+                } else if (tag.equals(ns + "address")) {
+                    address = readString(parser, tag);
                 } else {
                     skip(parser);
                 }
             }
-            return new Entry(region, section, shortname, name, phone, email, description);
+            return new Entry(region, section, shortname, name, phone, email, description, address);
         }
 
         private String readString(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {

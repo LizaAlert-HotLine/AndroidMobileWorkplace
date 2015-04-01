@@ -169,6 +169,8 @@ public class SearchActivity extends Activity {
                 R.id.section,
                 R.id.organization_name,
                 R.id.phones,
+                R.id.address,
+                R.id.email,
                 R.id.descriprion
         );
 

@@ -181,6 +181,8 @@ public class YellowPagesFragment extends Fragment {
                 R.id.section,
                 R.id.organization_name,
                 R.id.phones,
+                R.id.address,
+                R.id.email,
                 R.id.descriprion
         );
         list.setAdapter(organizationsAdapter);
@@ -281,9 +283,26 @@ public class YellowPagesFragment extends Fragment {
         // какой-то очень неправильный способ получить данные. нужно осваивать ContentProvider
         sb.append( ((TextView)v.findViewById(R.id.organization_name)).getText());
         sb.append("\n");
-        sb.append( ((TextView)v.findViewById(R.id.phones)).getText());
-        sb.append("\n");
-        sb.append(((TextView) v.findViewById(R.id.descriprion)).getText());
+        String str = ((TextView) v.findViewById(R.id.phones)).getText().toString();
+        if (str != null && !str.isEmpty()) {
+            sb.append(str);
+            sb.append("\n");
+        }
+        str = ((TextView) v.findViewById(R.id.address)).getText().toString();
+        if (str != null && !str.isEmpty()) {
+            sb.append(str);
+            sb.append("\n");
+        }
+        str = ((TextView) v.findViewById(R.id.email)).getText().toString();
+        if (str != null && !str.isEmpty()) {
+            sb.append(str);
+            sb.append("\n");
+        }
+        str = ((TextView) v.findViewById(R.id.descriprion)).getText().toString();
+        if (str != null && !str.isEmpty()) {
+            sb.append(str);
+            sb.append("\n");
+        }
 
         if (id == R.id.yp_context_copy) {
             Log.d(TAG, "copy");

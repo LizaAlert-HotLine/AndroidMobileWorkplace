@@ -71,10 +71,13 @@ public class YPEntry extends RealmObject {
     private String email;
     private String section;
     private String shortname;
+    private String address;
     @Index
     private String searchstring;
     @Index
     private String sortstring; // https://github.com/realm/realm-java/issues/648
+
+    // --------------------------------------------
 
     public YPRegion getRegion() {
         return region;
@@ -146,5 +149,13 @@ public class YPEntry extends RealmObject {
 
     public void setSortstring(String sortstring) {
         this.sortstring = sortstring;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

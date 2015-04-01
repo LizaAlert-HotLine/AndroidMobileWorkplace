@@ -61,6 +61,8 @@
 package ru.lizaalert.hotline.lib.yp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -94,6 +96,8 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
     private int organizationId;
     private int phonesId;
     private int descriptionId;
+    private int addressId;
+    private int emailId;
     private RealmResults<YPEntry> realmResults;
 
     Object[] sections;
@@ -106,12 +110,16 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
                                   int sectionId,
                                   int organizationId,
                                   int phonesId,
+                                  int addressId,
+                                  int emailId,
                                   int descriptionId) {
         super(context, realmResults, automaticUpdate);
         this.viewId = viewId;
         this.sectionId = sectionId;
         this.organizationId = organizationId;
         this.phonesId = phonesId;
+        this.addressId = addressId;
+        this.emailId = emailId;
         this.descriptionId = descriptionId;
         this.realmResults = realmResults;
 
@@ -148,6 +156,8 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
             viewHolder.organizationName = (TextView) convertView.findViewById(organizationId);
             viewHolder.phones = (TextView) convertView.findViewById(phonesId);
             viewHolder.description = (TextView) convertView.findViewById(descriptionId);
+            viewHolder.email = (TextView) convertView.findViewById(emailId);
+            viewHolder.address = (TextView) convertView.findViewById(addressId);
 
             // store the holder with the view.
             convertView.setTag(viewHolder);
@@ -227,12 +237,53 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
             viewHolder.phones.setText(st, TextView.BufferType.SPANNABLE);
             viewHolder.phones.setMovementMethod(LinkMovementMethod.getInstance());
 
-            viewHolder.description.setText(item.getDescription());
+            if (item.getDescription().isEmpty()) {
+                viewHolder.description.setVisibility(View.GONE);
+            } else {
+                viewHolder.description.setVisibility(View.VISIBLE);
+                viewHolder.description.setText(item.getDescription());
+            }
+
+            if (item.getEmail().isEmpty()) {
+                viewHolder.email.setVisibility(View.GONE);
+            } else {
+                viewHolder.email.setVisibility(View.VISIBLE);
+                viewHolder.email.setText(item.getEmail());
+            }
+
+            if (item.getAddress().isEmpty()) {
+                viewHolder.address.setVisibility(View.GONE);
+            } else {
+                viewHolder.address.setVisibility(View.VISIBLE);
+                viewHolder.address.setText(item.getAddress());
+                viewHolder.address.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openMap(v);
+
+                    }
+                });
+            }
+
+
 
 //            Log.i(LOG_TAG, "display item " + position + " " + item.name);
         }
 
         return convertView;
+    }
+
+    private void openMap (View v) {
+
+        String address = ((TextView)v).getText().toString();
+        String map = "geo:0,0?q=" + address;
+        Uri uri = Uri.parse(map);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
     }
 
     @Override
@@ -264,5 +315,7 @@ public class YPOrganizationsAdapter extends RealmBaseAdapter<YPEntry> implements
         public TextView organizationName;
         public TextView phones;
         public TextView description;
+        public TextView email;
+        public TextView address;
     }
 }
